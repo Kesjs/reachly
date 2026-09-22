@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@400;500;600&family=Poppins:wght@500;600;700&family=Archivo:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Palette Reflet — variables en triplet RGB (pas hex) pour que les
+   modificateurs d'opacité Tailwind (bg-brand/10, border-info/30, etc.)
+   continuent de fonctionner une fois les couleurs pilotées par variable.
+   Voir tailwind.config.js : chaque couleur sémantique résout vers
+   rgb(var(--color-x) / <alpha-value>).
+
+   .dark est la valeur par défaut (comportement d'origine de Reflet,
+   inchangé) — .light est un override optionnel, activé par ThemeProvider. */
+:root,
+.dark {
+  --color-canvas: 15 15 15;            /* #0f0f0f */
+  --color-sidebar: 15 15 15;           /* #0f0f0f */
+  --color-surface: 20 20 20;           /* #141414 */
+  --color-elevated: 26 26 26;          /* #1a1a1a */
+  --color-border: 38 38 38;            /* #262626 */
+  --color-border-strong: 51 51 51;     /* #333333 */
+  --color-ink-primary: 245 245 245;    /* #f5f5f5 */
+  --color-ink-secondary: 163 163 163;  /* #a3a3a3 */
+  --color-ink-muted: 107 107 107;      /* #6b6b6b */
+  --color-brand: 255 92 73;            /* #ff5c49 — corail Reachly */
+  --color-brand-hover: 232 69 47;      /* #e8452f */
+  --color-brand-text: 255 138 118;     /* #ff8a76 */
+  --color-success: 34 197 94;          /* #22c55e */
+  --color-danger: 239 68 68;           /* #ef4444 */
+  --color-info: 59 130 246;            /* #3b82f6 */
+  --color-warning: 249 115 22;         /* #f97316 */
+
+  --background: 0 0 0;
+  --foreground: 243 244 246;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Space Grotesk', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Mode clair — Inspiré des meilleurs standards SaaS modernes (Lumail, Linear, Stripe).
+   Canvas : fond neutre doux (#f4f5f8).
+   Sidebar : fond teinté subtil (#f8f9fb) avec délimitation nette.
+   Cartes (Surface) : blanc pur (#ffffff) qui ressort nettement avec bordure fine et ombre douce.
+   Elevated : fond légèrement teinté (#f3f4f7) pour les pills et sélecteurs. */
+.light {
+  --color-canvas: 244 245 248;         /* #f4f5f8 — fond doux et moderne */
+  --color-sidebar: 248 249 251;        /* #f8f9fb — sidebar légèrement teintée */
+  --color-surface: 255 255 255;        /* #ffffff — cartes blanc pur qui ressortent */
+  --color-elevated: 243 244 247;       /* #f3f4f7 — pills & hover states */
+  --color-border: 226 230 236;         /* #e2e6ec — bordures nettes et bien définies */
+  --color-border-strong: 203 210 220;  /* #cbd2dc */
+  --color-ink-primary: 15 23 42;       /* #0f172a — contraste texte profond */
+  --color-ink-secondary: 71 85 105;    /* #475569 */
+  --color-ink-muted: 148 163 184;      /* #94a3b8 */
+  --color-brand: 232 69 47;            /* #e8452f — corail Reachly, assombri pour le mode clair */
+  --color-brand-hover: 201 58 38;      /* #c93a26 */
+  --color-brand-text: 161 46 30;       /* #a12e1e */
+  --color-success: 22 163 74;          /* #16a34a */
+  --color-danger: 220 38 38;           /* #dc2626 */
+  --color-info: 37 99 235;             /* #2563eb */
+  --color-warning: 217 119 6;          /* #d97706 */
+
+  --background: 244 245 248;
+  --foreground: 15 23 42;
+}
+
+/* En mode clair, donner aux cartes un relief subtil pour les faire ressortir comme Lumail */
+.light .bg-surface {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+body {
+  color: rgb(var(--foreground));
+  background: rgb(var(--background));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'tnum' 1, 'cv05' 1;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* Thème "precision instrument" (tokens Linear) — scopé à la landing
+   marketing uniquement via la classe .theme-landing sur le wrapper racine
+   de src/routes/index.tsx. Le produit connecté (dashboard) garde sa
+   palette actuelle (.dark ci-dessus), inchangée. Seul --color-brand /
+   --color-brand-hover / --color-brand-text ne sont PAS redéfinis ici :
+   la landing hérite du corail Reachly comme accent unique, à la
+   place de l'acid-lime #e4f222 de Linear. */
+.theme-landing {
+  --color-canvas: 8 9 10;              /* #08090a — Void */
+  --color-surface: 15 16 17;           /* #0f1011 — Carbon */
+  --color-elevated: 22 23 24;          /* #161718 — Obsidian */
+  --color-border: 35 37 42;            /* #23252a — Graphite */
+  --color-border-strong: 56 59 63;     /* #383b3f — Smoke */
+  --color-ink-primary: 255 255 255;    /* #ffffff — Paper */
+  --color-ink-secondary: 208 214 224;  /* #d0d6e0 — Mist */
+  --color-ink-muted: 138 143 152;      /* #8a8f98 — Fog */
+
+  /* Typeface — Option 3 (Le Néo-Moderne) : Poppins pour les titres, Outfit pour le corps. */
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Poppins', var(--font-sans);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv01' 1, 'ss03' 1, 'zero' 1;
+}
+
+/* Landing Reachly — ne change QUE les polices (Archivo/Manrope/JetBrains Mono,
+   fidèles au design Next.js d'origine). Les couleurs restent celles du thème
+   .dark (canvas, corail --color-brand, etc.), déjà cohérentes avec le reste
+   du produit. Scopé sur le wrapper racine de src/routes/index.tsx. */
+.theme-reachly {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Archivo', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-family: var(--font-sans);
+}
+
+/* Bordures hairline 0.5px — Tailwind ne descend pas sous 1px nativement,
+   et c'est un élément central du système Linear (les séparations viennent
+   des bordures, jamais des ombres). */
+.border-hairline {
+  border-width: 0.5px;
+}
+
+/* Animations landing Reachly — portées telles quelles depuis globals.css (Next.js) */
+@keyframes blink-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.pulse-dot {
+  animation: blink-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-reveal > * {
+  animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero-reveal > *:nth-child(1) { animation-delay: 0ms; }
+.hero-reveal > *:nth-child(2) { animation-delay: 90ms; }
+.hero-reveal > *:nth-child(3) { animation-delay: 160ms; }
+.hero-reveal > *:nth-child(4) { animation-delay: 230ms; }
+
+/* Chiffres tabulaires partout où des valeurs numériques sont comparées
+   en colonne (scores, pourcentages, tableaux Performance/Concurrents) */
+.tabular-nums,
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom scrollbars — pilotées par thème elles aussi */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-canvas));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-border-strong));
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+/* Désactive l'icône oeil native des navigateurs (Edge/IE) pour les mots de passe */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
