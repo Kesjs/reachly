@@ -8,7 +8,7 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react'
 // encore de clients à citer, et une photo externe (cdn.21st.dev) créerait
 // une dépendance réseau inutile pour un écran d'auth.
 function ProductVisual() {
-  const checks = ['Page accessible', 'Champs fonctionnels', 'Soumission réussie', 'Confirmation reçue']
+  const checks = ['Pages analysées', 'Liens vérifiés', 'Formulaires testés', 'Problèmes détectés']
   return (
     <div className="relative flex h-full flex-col items-center justify-center overflow-hidden p-12">
       <div
@@ -21,10 +21,20 @@ function ProductVisual() {
             <span className="font-display text-[15px] font-bold text-white">Reachly</span>
             <span className="flex items-center gap-1.5 text-[12px] text-success">
               <span className="h-1.5 w-1.5 rounded-full bg-success" />
-              Formulaire surveillé
+              QA complete
             </span>
           </div>
-          <p className="mt-4 font-mono text-[13px] text-ink-secondary">mycompany.com/contact</p>
+          <p className="mt-4 font-mono text-[13px] text-ink-secondary">acme.com</p>
+          <div className="mt-3 flex gap-4 text-[12px]">
+            <div>
+              <span className="font-bold text-white">31</span>
+              <span className="ml-1 text-ink-muted">pages</span>
+            </div>
+            <div>
+              <span className="font-bold text-white">184</span>
+              <span className="ml-1 text-ink-muted">checks</span>
+            </div>
+          </div>
           <ul className="mt-4 space-y-2.5">
             {checks.map((c) => (
               <li key={c} className="flex items-center gap-2.5 text-[14px] text-ink-primary">
@@ -33,12 +43,15 @@ function ProductVisual() {
               </li>
             ))}
           </ul>
+          <div className="mt-3 text-[12px] text-ink-muted">
+            ✓ 169 passed • ⚠ 11 warnings • ✕ 4 issues
+          </div>
         </div>
         <p className="relative z-10 mt-8 text-center font-display text-xl font-semibold leading-snug text-white">
-          Ne perdez plus jamais un prospect à cause d&rsquo;un formulaire cassé.
+          Testez votre site avant que votre client ne le fasse.
         </p>
         <p className="relative z-10 mt-2 text-center text-sm text-ink-secondary">
-          Reachly teste vos formulaires comme un vrai visiteur, 24h/24.
+          Reachly détecte les problèmes cachés avant la livraison.
         </p>
       </div>
     </div>

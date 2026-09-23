@@ -1,73 +1,142 @@
-import { Container, Button, Eyebrow } from './ui'
-
-function ReportMockup() {
-  const checks = ['Page accessible', 'Champs fonctionnels', 'Soumission réussie', 'Confirmation reçue']
-  return (
-    <div className="relative w-full max-w-[420px]">
-      <div className="rounded-2xl border border-border bg-surface p-5 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
-        <div className="flex items-center justify-between border-b border-border pb-4">
-          <span className="font-display text-[15px] font-bold text-white">Reachly</span>
-          <span className="flex items-center gap-1.5 text-[12px] text-success">
-            <span className="h-1.5 w-1.5 rounded-full bg-success pulse-dot" />
-            Formulaire surveillé
-          </span>
-        </div>
-        <p className="mt-4 font-mono text-[13px] text-ink-secondary">mycompany.com/contact</p>
-        <ul className="mt-4 space-y-2.5">
-          {checks.map((c) => (
-            <li key={c} className="flex items-center gap-2.5 text-[14px] text-ink-primary">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-success/15 text-[11px] text-success">
-                ✓
-              </span>
-              {c}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border pt-4 text-[13px]">
-          <div>
-            <p className="text-ink-muted">Dernier test</p>
-            <p className="mt-0.5 text-ink-primary">Aujourd&rsquo;hui · 14:32</p>
-          </div>
-          <div>
-            <p className="text-ink-muted">Prochain test</p>
-            <p className="mt-0.5 text-ink-primary">Dans 58 min</p>
-          </div>
-        </div>
-      </div>
-      <div className="absolute -bottom-6 -left-6 hidden w-64 rounded-xl border border-border bg-elevated p-3.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] sm:block">
-        <p className="text-[13px] font-semibold text-brand-text">🔴 Problème détecté</p>
-        <p className="mt-1 text-[12.5px] leading-snug text-ink-secondary">/api/contact retourne HTTP 500.</p>
-      </div>
-    </div>
-  )
-}
+import { Link } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
+import { CheckCircle, AlertTriangle, XCircle } from 'lucide-react'
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div
-        className="pointer-events-none absolute -top-32 right-0 h-[520px] w-[520px] rounded-full opacity-20 blur-[120px]"
-        style={{ background: 'radial-gradient(circle, #ff5c49 0%, transparent 70%)' }}
-      />
-      <Container className="relative grid items-center gap-14 py-20 md:grid-cols-2 md:py-28">
-        <div className="hero-reveal">
-          <Eyebrow>Monitoring automatique des formulaires</Eyebrow>
-          <h1 className="mt-6 font-display text-[38px] font-extrabold leading-[1.12] tracking-tight text-white sm:text-[46px]">
-            Ne perdez plus jamais un prospect à cause d&rsquo;un formulaire cassé.
-          </h1>
-          <p className="mt-5 max-w-[480px] text-[17px] leading-relaxed text-ink-secondary">
-            Reachly teste vos formulaires comme un vrai visiteur, remplit les champs, envoie la
-            demande, et vous prévient immédiatement lorsqu&rsquo;une soumission échoue.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Button href="#tester">Tester mon formulaire</Button>
-            <span className="text-[13px] text-ink-muted">Test gratuit · Aucune carte bancaire</span>
+    <section className="relative overflow-hidden bg-canvas py-16 sm:py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+          {/* Left Column - Content */}
+          <div className="hero-reveal space-y-8">
+            {/* Eyebrow */}
+            <div className="inline-flex items-center rounded-full border border-border bg-elevated px-4 py-2 text-sm text-ink-secondary">
+              <span className="mr-2 h-2 w-2 rounded-full bg-brand"></span>
+              Pre-delivery website QA
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-4xl font-bold tracking-tight text-ink-primary sm:text-5xl lg:text-6xl font-display">
+              Ne livrez pas un site avant de l'avoir testé.
+            </h1>
+
+            {/* Subheadline */}
+            <p className="text-lg text-ink-secondary sm:text-xl">
+              Reachly ouvre votre site comme un vrai utilisateur, teste ses pages, ses liens, 
+              ses formulaires, ses boutons, son mobile et ses erreurs techniques — puis vous 
+              indique exactement ce qui doit être corrigé.
+            </p>
+
+            {/* CTA Section */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+              <Link 
+                to="/signup"
+                className="inline-flex items-center justify-center rounded-lg bg-brand px-8 py-4 text-lg font-medium text-canvas hover:bg-brand-hover transition-colors"
+              >
+                Tester mon site
+              </Link>
+              <div className="flex items-center gap-2 text-sm text-ink-muted">
+                <CheckCircle className="h-4 w-4 text-success" />
+                <span>Full QA · Rapport avec preuves</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Mockup */}
+          <div className="relative">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.7 }}
+              className="rounded-2xl border border-border bg-surface p-6 shadow-xl"
+            >
+              {/* Header */}
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-ink-primary font-display">Reachly</h3>
+                  <p className="text-sm text-ink-muted">acme.com</p>
+                </div>
+                <div className="rounded-lg bg-success/10 px-3 py-1">
+                  <span className="text-sm font-medium text-success">✓ QA complete</span>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="mb-6 grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-2xl font-bold text-ink-primary">31</p>
+                  <p className="text-sm text-ink-muted">pages</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-ink-primary">184</p>
+                  <p className="text-sm text-ink-muted">checks</p>
+                </div>
+              </div>
+
+              {/* Results Summary */}
+              <div className="mb-6 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-success" />
+                    <span className="text-sm text-ink-secondary">169 passed</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-warning" />
+                    <span className="text-sm text-ink-secondary">11 warnings</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-4 w-4 text-danger" />
+                    <span className="text-sm text-ink-secondary">4 issues</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Critical Issues */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-ink-primary">Critical issues</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-3 w-3 text-danger" />
+                    <span className="text-sm text-ink-muted">Contact form fails</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-3 w-3 text-danger" />
+                    <span className="text-sm text-ink-muted">/pricing → 404</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-3 w-3 text-danger" />
+                    <span className="text-sm text-ink-muted">Mobile overflow</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-3 w-3 text-danger" />
+                    <span className="text-sm text-ink-muted">JavaScript error</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Callout */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1, duration: 0.3 }}
+                className="mt-4 rounded-lg border border-danger/20 bg-danger/5 p-3"
+              >
+                <div className="flex items-start gap-2">
+                  <XCircle className="h-4 w-4 text-danger mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-danger">Issue detected</p>
+                    <p className="text-xs text-ink-muted">POST /api/contact → HTTP 500</p>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
-        <div className="flex justify-center md:justify-end">
-          <ReportMockup />
-        </div>
-      </Container>
+      </div>
     </section>
   )
 }

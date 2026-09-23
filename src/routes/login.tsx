@@ -22,11 +22,11 @@ type AuthMode = 'password' | 'register' | 'forgot' | 'otp' | 'otp-verify'
 const COPY: Record<AuthMode, { title: string; description: string }> = {
   password: {
     title: 'Content de vous revoir',
-    description: 'Connectez-vous pour retrouver vos formulaires surveillés.',
+    description: 'Connectez-vous pour retrouver vos sites et vos rapports QA.',
   },
   register: {
     title: 'Créer un compte',
-    description: 'Testez votre premier formulaire gratuitement, sans carte bancaire.',
+    description: 'Créez votre espace Reachly et testez votre premier site gratuitement.',
   },
   forgot: {
     title: 'Mot de passe oublié',

@@ -37,7 +37,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'Reachly — Ne perdez plus jamais un prospect à cause d\u2019un formulaire cassé' },
+      { title: 'Reachly — Testez votre site avant que votre client ne le fasse' },
       { name: 'theme-color', content: '#ff5c49' },
     ],
     links: [
