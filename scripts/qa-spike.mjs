@@ -20,6 +20,10 @@
  * Usage :
  *   node scripts/qa-spike.mjs https://exemple.com
  *   node scripts/qa-spike.mjs https://exemple.com --max-pages=15
+ *
+ * Prérequis : `playwright` doit être une dependency de prod (pas seulement
+ * devDependency) pour tourner sur Vercel plus tard — corriger package.json
+ * en parallèle de ce spike, cf. spec §6.1.
  */
 
 import { chromium } from 'playwright'
@@ -50,6 +54,20 @@ const PRIVATE_IP_PATTERNS = [
   /^0\.0\.0\.0$/,
 ]
 
+// Erreurs React minifiées connues comme des warnings d'hydratation bénins
+// (souvent liés à des extensions navigateur, du rendu conditionnel, etc.),
+// pas des bugs visibles pour l'utilisateur. Confirmé sur linear.app (§6.3) :
+// deux pages saines remontaient #419 sans aucun autre signal derrière.
+// On les garde tracées pour debug, mais on ne les compte pas comme issue.
+const BENIGN_REACT_HYDRATION_CODES = new Set([418, 419, 421, 422, 423, 425])
+const REACT_ERROR_CODE_RE = /Minified React error #(\d+)/
+
+function isBenignHydrationError(message) {
+  const match = message.match(REACT_ERROR_CODE_RE)
+  if (!match) return false
+  return BENIGN_REACT_HYDRATION_CODES.has(parseInt(match[1], 10))
+}
+
 if (!targetUrl) {
   console.error('Usage: node scripts/qa-spike.mjs <url> [--max-pages=15] [--max-depth=4]')
   process.exit(1)
@@ -63,6 +81,7 @@ function normalizeUrl(rawUrl, base) {
   try {
     const u = new URL(rawUrl, base)
     u.hash = ''
+    // dédup basique : trailing slash, casing de l'host
     u.hostname = u.hostname.toLowerCase()
     if (u.pathname !== '/' && u.pathname.endsWith('/')) {
       u.pathname = u.pathname.slice(0, -1)
@@ -99,7 +118,7 @@ async function discoverUrls(startUrl) {
     console.log('  sitemap.xml : absent ou inaccessible')
   }
 
-  // robots.txt
+  // robots.txt (juste pour log — pas de parsing de règles dans le spike)
   try {
     const robotsUrl = new URL('/robots.txt', start.origin).toString()
     const res = await fetch(robotsUrl, { signal: AbortSignal.timeout(5000) })
@@ -133,7 +152,8 @@ async function testPage(browser, url) {
     httpStatus: null,
     consoleErrors: [],
     jsExceptions: [],
-    networkErrors: [],
+    benignHydrationWarnings: [], // tracées mais jamais remontées comme issue
+    networkErrors: [], // 4xx/5xx, avec l'action/requête qui les a causés
     forms: [],
     screenshots: {},
     timedOut: false,
@@ -141,7 +161,7 @@ async function testPage(browser, url) {
   }
 
   const context = await browser.newContext({
-    viewport: { width: 375, height: 812 },
+    viewport: { width: 375, height: 812 }, // mobile d'abord
     userAgent:
       'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
   })
@@ -151,7 +171,11 @@ async function testPage(browser, url) {
     if (msg.type() === 'error') result.consoleErrors.push(msg.text())
   })
   page.on('pageerror', (err) => {
-    result.jsExceptions.push(err.message)
+    if (isBenignHydrationError(err.message)) {
+      result.benignHydrationWarnings.push(err.message)
+    } else {
+      result.jsExceptions.push(err.message)
+    }
   })
   page.on('response', (res) => {
     const status = res.status()
@@ -164,20 +188,23 @@ async function testPage(browser, url) {
     const res = await page.goto(url, { timeout: NAV_TIMEOUT_MS, waitUntil: 'domcontentloaded' })
     result.httpStatus = res ? res.status() : null
     if (result.httpStatus === 403 || result.httpStatus === 503) {
+      // heuristique très basique de blocage bot/CDN — à affiner après mesure réelle (spec §6.4)
       const body = (await page.content()).toLowerCase()
       if (body.includes('cloudflare') || body.includes('captcha') || body.includes('access denied')) {
         result.blocked = true
       }
     }
 
-    await page.waitForTimeout(500)
+    await page.waitForTimeout(500) // laisser respirer le JS/hydration
 
+    // screenshot mobile
     await mkdir(OUTPUT_DIR, { recursive: true })
     const slug = url.replace(/https?:\/\//, '').replace(/[^a-z0-9]/gi, '_').slice(0, 80)
     const mobilePath = path.join(OUTPUT_DIR, `${slug}__mobile.png`)
     await page.screenshot({ path: mobilePath })
     result.screenshots.mobile = mobilePath
 
+    // formulaires — détection basique, AUCUNE soumission (Deep Form Test = opt-in, hors spike)
     const forms = await page.$$eval('form', (formEls) =>
       formEls.map((f) => ({
         action: f.getAttribute('action') || null,
@@ -188,6 +215,7 @@ async function testPage(browser, url) {
     )
     result.forms = forms
 
+    // repasser en desktop pour le 2e screenshot (même page, pas de re-navigation réseau)
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.waitForTimeout(300)
     const desktopPath = path.join(OUTPUT_DIR, `${slug}__desktop.png`)
