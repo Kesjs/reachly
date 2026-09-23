@@ -3,47 +3,105 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Globe, Play, AlertCircle } from 'lucide-react'
 import { QAWorkflowStates } from './QAWorkflowStates'
 import type { ScanStatus } from '~/lib/types/qa'
+import { createSite, startQAScan, getScanStatus } from '~/lib/api/qa'
+import { validateUrl } from '~/lib/qa/utils'
 
 interface NewQAModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (siteId: string) => void
+  userId?: string
 }
 
-export function NewQAModal({ isOpen, onClose, onSuccess }: NewQAModalProps) {
+export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalProps) {
   const [step, setStep] = useState<'input' | 'scanning' | 'success' | 'error'>('input')
   const [url, setUrl] = useState('')
   const [scanStatus, setScanStatus] = useState<ScanStatus>('idle')
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [siteId, setSiteId] = useState<string | null>(null)
+  const [scanId, setScanId] = useState<string | null>(null)
 
   const handleStartQA = async () => {
     if (!url.trim()) return
     
+    // Valider l'URL
+    const validation = validateUrl(url)
+    if (!validation.valid) {
+      setError(validation.error || 'URL invalide')
+      setStep('error')
+      return
+    }
+
+    if (!userId) {
+      setError('Utilisateur non connecté')
+      setStep('error')
+      return
+    }
+
     try {
       setStep('scanning')
       setScanStatus('discovering')
       setProgress(0)
+      setError(null)
 
-      // Mock scanning process
-      const scanSteps: ScanStatus[] = ['discovering', 'testing', 'forms', 'browser', 'visual', 'finalizing', 'completed']
-      
-      for (let i = 0; i < scanSteps.length; i++) {
-        setScanStatus(scanSteps[i])
-        setProgress(Math.round(((i + 1) / scanSteps.length) * 100))
-        
-        // Wait time between steps
-        const waitTime = scanSteps[i] === 'completed' ? 500 : Math.random() * 2000 + 1000
-        await new Promise(resolve => setTimeout(resolve, waitTime))
-        
-        if (scanSteps[i] === 'completed') {
-          setStep('success')
-          onSuccess?.('mock-site-id')
-          break
+      // Créer le site
+      const site = await createSite(userId, url)
+      setSiteId(site.id)
+
+      // Lancer le scan
+      const { scanId: newScanId } = await startQAScan(site.id, userId, url, 'full')
+      setScanId(newScanId)
+
+      // Polling du statut du scan
+      const pollInterval = setInterval(async () => {
+        try {
+          const status = await getScanStatus(newScanId)
+          if (status) {
+            setScanStatus(status)
+            
+            // Calculer la progression basée sur le statut
+            const progressMap: Record<string, number> = {
+              'created': 0,
+              'discovering': 10,
+              'crawling': 30,
+              'browser_testing': 60,
+              'analyzing': 80,
+              'reporting': 90,
+              'completed': 100,
+              'partial': 100,
+              'failed': 0,
+              'blocked': 0
+            }
+            setProgress(progressMap[status] || 0)
+
+            if (status === 'completed') {
+              clearInterval(pollInterval)
+              setStep('success')
+              onSuccess?.(site.id)
+            } else if (status === 'failed' || status === 'blocked') {
+              clearInterval(pollInterval)
+              setError('Le scan a échoué. Veuillez réessayer.')
+              setStep('error')
+            }
+          }
+        } catch (err) {
+          clearInterval(pollInterval)
+          console.error('Erreur lors du polling:', err)
         }
-      }
+      }, 2000)
+
+      // Timeout après 10 minutes
+      setTimeout(() => {
+        clearInterval(pollInterval)
+        if (step === 'scanning') {
+          setError('Le scan prend trop de temps. Veuillez réessayer.')
+          setStep('error')
+        }
+      }, 600000)
+
     } catch (err) {
-      setError('Erreur lors du QA. Veuillez réessayer.')
+      setError(err instanceof Error ? err.message : 'Erreur lors du QA. Veuillez réessayer.')
       setStep('error')
     }
   }
@@ -54,6 +112,8 @@ export function NewQAModal({ isOpen, onClose, onSuccess }: NewQAModalProps) {
     setScanStatus('idle')
     setProgress(0)
     setError(null)
+    setSiteId(null)
+    setScanId(null)
   }
 
   const handleClose = () => {

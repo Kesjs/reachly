@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, AlertTriangle, CheckCircle, Clock, ExternalLink } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
-import { mockSites } from '~/lib/mock-data/qa-data'
+import { getUserSites } from '~/lib/api/qa'
 import { NewQAModal } from '~/components/qa/NewQAModal'
 import type { Site } from '~/lib/types/qa'
 
@@ -12,11 +12,70 @@ export const Route = createFileRoute('/dashboard/')({
 })
 
 function DashboardPage() {
-  const [websites] = useState<Site[]>(mockSites)
+  const [websites, setWebsites] = useState<Site[]>([])
+  const [loading, setLoading] = useState(true)
   const [isNewQAModalOpen, setIsNewQAModalOpen] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Récupérer l'ID utilisateur depuis l'auth Supabase
+    const fetchSites = async () => {
+      try {
+        // Pour l'instant, utiliser un ID utilisateur fictif
+        // Dans une vraie implémentation, récupérer depuis auth
+        const mockUserId = 'mock-user-id'
+        setUserId(mockUserId)
+        
+        const sites = await getUserSites(mockUserId)
+        
+        // Transformer les données Supabase en format Site
+        const transformedSites = sites.map(site => ({
+          id: site.id,
+          name: site.name || new URL(site.url).hostname,
+          url: site.url,
+          createdAt: site.created_at,
+          lastScan: site.scans?.[0] ? {
+            id: site.scans[0].id,
+            siteId: site.id,
+            status: site.scans[0].status as any,
+            startTime: site.scans[0].created_at,
+            endTime: site.scans[0].completed_at || undefined,
+            duration: site.scans[0].completed_at 
+              ? `${Math.round((new Date(site.scans[0].completed_at).getTime() - new Date(site.scans[0].created_at).getTime()) / 60000)}m`
+              : undefined,
+            pagesDiscovered: site.scans[0].pages_discovered,
+            totalChecks: site.scans[0].checks_total,
+            passed: site.scans[0].checks_passed,
+            warnings: site.scans[0].checks_warning,
+            issues: site.scans[0].critical_count + site.scans[0].major_count,
+            pages: [],
+            allIssues: [],
+            checks: []
+          } : undefined,
+          scanHistory: []
+        }))
+        
+        setWebsites(transformedSites)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des sites:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSites()
+  }, [])
 
   const needsAttention = websites.filter(w => w.lastScan?.issues && w.lastScan.issues > 0).length
   const totalSites = websites.length
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <div className="text-ink-muted">Chargement...</div>
+      </div>
+    )
+  }
 
   if (websites.length === 0) {
     return <EmptyDashboard onNewQA={() => setIsNewQAModalOpen(true)} />
@@ -59,9 +118,38 @@ function DashboardPage() {
         isOpen={isNewQAModalOpen}
         onClose={() => setIsNewQAModalOpen(false)}
         onSuccess={(siteId) => {
-          // Handle success - could navigate to new site or refresh data
+          // Refresh the sites list
+          getUserSites(userId || 'mock-user-id').then(sites => {
+            const transformedSites = sites.map(site => ({
+              id: site.id,
+              name: site.name || new URL(site.url).hostname,
+              url: site.url,
+              createdAt: site.created_at,
+              lastScan: site.scans?.[0] ? {
+                id: site.scans[0].id,
+                siteId: site.id,
+                status: site.scans[0].status as any,
+                startTime: site.scans[0].created_at,
+                endTime: site.scans[0].completed_at || undefined,
+                duration: site.scans[0].completed_at 
+                  ? `${Math.round((new Date(site.scans[0].completed_at).getTime() - new Date(site.scans[0].created_at).getTime()) / 60000)}m`
+                  : undefined,
+                pagesDiscovered: site.scans[0].pages_discovered,
+                totalChecks: site.scans[0].checks_total,
+                passed: site.scans[0].checks_passed,
+                warnings: site.scans[0].checks_warning,
+                issues: site.scans[0].critical_count + site.scans[0].major_count,
+                pages: [],
+                allIssues: [],
+                checks: []
+              } : undefined,
+              scanHistory: []
+            }))
+            setWebsites(transformedSites)
+          })
           setIsNewQAModalOpen(false)
         }}
+        userId={userId || undefined}
       />
     </div>
   )

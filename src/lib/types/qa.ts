@@ -1,5 +1,5 @@
 // Types pour le système QA
-export type ScanStatus = 'idle' | 'discovering' | 'testing' | 'forms' | 'browser' | 'visual' | 'finalizing' | 'completed' | 'partial' | 'failed' | 'blocked'
+export type ScanStatus = 'idle' | 'created' | 'discovering' | 'crawling' | 'browser_testing' | 'analyzing' | 'reporting' | 'completed' | 'partial' | 'failed' | 'blocked'
 
 export type CheckStatus = 'passed' | 'warning' | 'failed' | 'skipped' | 'running'
 
