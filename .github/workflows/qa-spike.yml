@@ -41,3 +41,4 @@ jobs:
           name: qa-spike-report
           path: .qa-spike-output/
           retention-days: 14
+          include-hidden-files: true
