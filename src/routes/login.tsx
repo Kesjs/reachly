@@ -92,6 +92,22 @@ function LoginPage() {
     }
   }
 
+  // Mode simulation pour développement
+  async function handleSimulationLogin() {
+    setIsLoading(true)
+    try {
+      // Simuler une connexion réussie sans auth réelle
+      localStorage.setItem('simulation_mode', 'true')
+      localStorage.setItem('simulation_user', JSON.stringify({ email: 'demo@reachly.fr', id: 'demo-user' }))
+      toast.success('Mode simulation activé')
+      setTimeout(() => { window.location.href = '/dashboard' }, 300)
+    } catch (err: any) {
+      toast.error('Erreur lors de la simulation')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     if (!email || !password) {
@@ -245,6 +261,15 @@ function LoginPage() {
                 )}
               >
                 {isLoading ? 'Connexion…' : 'Se connecter'}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSimulationLogin}
+                disabled={isLoading}
+                className="w-full rounded-xl border border-hairline border-border bg-surface py-3 text-sm text-ink-secondary transition-colors hover:bg-elevated hover:text-ink-primary disabled:opacity-50"
+              >
+                🧪 Mode simulation (dev)
               </button>
             </form>
 

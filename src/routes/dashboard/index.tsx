@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, AlertTriangle, CheckCircle, Clock, ExternalLink } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
@@ -12,8 +12,19 @@ export const Route = createFileRoute('/dashboard/')({
 })
 
 function DashboardPage() {
+  const navigate = useNavigate()
   const [websites] = useState<Site[]>(mockSites)
   const [isNewQAModalOpen, setIsNewQAModalOpen] = useState(false)
+
+  // Vérifier le mode simulation
+  useEffect(() => {
+    const isSimulation = localStorage.getItem('simulation_mode')
+    if (!isSimulation) {
+      // Rediriger vers login si pas en mode simulation et pas de session
+      // Pour l'instant, on permet l'accès en dev
+      console.log('Mode développement - accès dashboard sans auth')
+    }
+  }, [navigate])
 
   const needsAttention = websites.filter(w => w.lastScan?.issues && w.lastScan.issues > 0).length
   const totalSites = websites.length
