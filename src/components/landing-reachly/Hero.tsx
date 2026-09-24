@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CheckCircle2, XCircle, Terminal, ArrowUpRight } from 'lucide-react'
+import { BeamsBackground } from './BeamsBackground'
 
 const pipeline = [
   'Découverte du site',
@@ -225,8 +226,9 @@ function ReportPanel() {
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-canvas py-20 sm:py-28 lg:py-32">
-      <div className="landing-grain pointer-events-none absolute inset-0 opacity-60" />
+    <section className="relative overflow-hidden py-20 sm:py-28 lg:py-32">
+      <BeamsBackground intensity="medium">
+        <div className="landing-grain pointer-events-none absolute inset-0 opacity-60" />
 
       <div className="relative mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:gap-12 items-center">
@@ -276,6 +278,7 @@ export function Hero() {
           </div>
         </div>
       </div>
+      </BeamsBackground>
     </section>
   )
 }
