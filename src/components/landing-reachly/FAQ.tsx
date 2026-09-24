@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
+import { gsap } from '~/lib/landing-gsap'
 
 const faqs = [
   {
@@ -9,7 +9,7 @@ const faqs = [
   },
   {
     question: 'Que vérifie Reachly ?',
-    answer: 'Les pages, les liens, les formulaires, les boutons, les erreurs navigateur, les requêtes réseau, le responsive, le SEO technique de base, les assets, l\'accessibilité et la performance de base.',
+    answer: "Les pages, les liens, les formulaires, les boutons, les erreurs navigateur, les requêtes réseau, le responsive, le SEO technique de base, les assets, l'accessibilité et la performance de base.",
   },
   {
     question: 'Est-ce seulement un audit SEO ?',
@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: 'Puis-je relancer le test après avoir corrigé les problèmes ?',
-    answer: 'Oui. Le retest est inclus et confirme que les problèmes détectés ont bien disparu, sans qu\'un nouveau problème soit apparu entre-temps.',
+    answer: "Oui. Le retest est inclus et confirme que les problèmes détectés ont bien disparu, sans qu'un nouveau problème soit apparu entre-temps.",
   },
   {
     question: 'Puis-je partager le rapport avec mon client ?',
@@ -37,56 +37,77 @@ const faqs = [
   },
 ]
 
+function FAQItem({ question, answer, isOpen, onToggle }: { question: string; answer: string; isOpen: boolean; onToggle: () => void }) {
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = bodyRef.current
+    if (!el) return
+
+    if (isOpen) {
+      const targetHeight = el.scrollHeight
+      gsap.fromTo(
+        el,
+        { height: 0, opacity: 0 },
+        { height: targetHeight, opacity: 1, duration: 0.25, ease: 'power2.out', onComplete: () => gsap.set(el, { height: 'auto' }) },
+      )
+    } else {
+      gsap.to(el, { height: 0, opacity: 0, duration: 0.2, ease: 'power2.in' })
+    }
+  }, [isOpen])
+
+  return (
+    <div>
+      <button className="w-full py-5 text-left flex items-center justify-between gap-4" onClick={onToggle}>
+        <span className="text-base font-medium text-ink-primary">{question}</span>
+        <Plus
+          className={`h-4 w-4 text-ink-muted shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-45' : ''}`}
+        />
+      </button>
+      <div ref={bodyRef} className="overflow-hidden" style={{ height: 0, opacity: 0 }}>
+        <p className="pb-5 text-ink-secondary leading-relaxed max-w-xl">{answer}</p>
+      </div>
+    </div>
+  )
+}
+
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const sectionTitleRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = sectionTitleRef.current
+    if (!el) return
+    const tween = gsap.fromTo(
+      el,
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.4, scrollTrigger: { trigger: el, start: 'top 80%' } },
+    )
+    return () => {
+      tween.kill()
+    }
+  }, [])
 
   return (
     <section className="py-20 sm:py-28 bg-surface border-t border-hairline border-border">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
+        <div ref={sectionTitleRef}>
           <h2 className="text-3xl font-semibold text-ink-primary sm:text-4xl font-display mb-12">
             Questions fréquentes
           </h2>
 
           <div className="divide-y divide-border border-t border-b border-hairline border-border">
-            {faqs.map((faq, index) => {
-              const isOpen = openIndex === index
-              return (
-                <div key={faq.question}>
-                  <button
-                    className="w-full py-5 text-left flex items-center justify-between gap-4"
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                  >
-                    <span className="text-base font-medium text-ink-primary">{faq.question}</span>
-                    <Plus
-                      className={`h-4 w-4 text-ink-muted shrink-0 transition-transform duration-200 ${
-                        isOpen ? 'rotate-45' : ''
-                      }`}
-                    />
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: 'easeInOut' }}
-                        className="overflow-hidden"
-                      >
-                        <p className="pb-5 text-ink-secondary leading-relaxed max-w-xl">{faq.answer}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              )
-            })}
+            {faqs.map((faq, index) => (
+              <FAQItem
+                key={faq.question}
+                question={faq.question}
+                answer={faq.answer}
+                isOpen={openIndex === index}
+                onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+              />
+            ))}
           </div>
-        </motion.div>
+        </div>
 
         <p className="mt-10 text-ink-secondary">
           Une autre question ?{' '}

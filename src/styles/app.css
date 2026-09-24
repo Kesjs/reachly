@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@400;500;600&family=Poppins:wght@500;600;700&family=Archivo:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;600;700&family=Archivo:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Geist Sans / Geist Mono — landing Reachly uniquement (.theme-landing),
+   self-hébergées via Fontsource plutôt que Google Fonts. Le reste du
+   produit (dashboard, .dark racine) garde Plus Jakarta Sans, inchangé. */
+@import '@fontsource/geist-sans/400.css';
+@import '@fontsource/geist-sans/500.css';
+@import '@fontsource/geist-sans/600.css';
+@import '@fontsource/geist-sans/700.css';
+@import '@fontsource/geist-mono/400.css';
+@import '@fontsource/geist-mono/500.css';
+@import '@fontsource/geist-mono/600.css';
 
 @tailwind base;
 @tailwind components;
@@ -87,18 +98,20 @@ body {
    la landing hérite du corail Reachly comme accent unique, à la
    place de l'acid-lime #e4f222 de Linear. */
 .theme-landing {
-  --color-canvas: 8 9 10;              /* #08090a — Void */
-  --color-surface: 15 16 17;           /* #0f1011 — Carbon */
-  --color-elevated: 22 23 24;          /* #161718 — Obsidian */
-  --color-border: 35 37 42;            /* #23252a — Graphite */
-  --color-border-strong: 56 59 63;     /* #383b3f — Smoke */
-  --color-ink-primary: 255 255 255;    /* #ffffff — Paper */
-  --color-ink-secondary: 208 214 224;  /* #d0d6e0 — Mist */
-  --color-ink-muted: 138 143 152;      /* #8a8f98 — Fog */
+  --color-canvas: 0 0 0;               /* #000000 — noir pur, façon Vercel */
+  --color-surface: 10 10 10;           /* #0a0a0a */
+  --color-elevated: 18 18 18;          /* #121212 */
+  --color-border: 31 31 31;            /* #1f1f1f */
+  --color-border-strong: 51 51 51;     /* #333333 */
+  --color-ink-primary: 255 255 255;    /* #ffffff */
+  --color-ink-secondary: 200 200 200;  /* #c8c8c8 */
+  --color-ink-muted: 128 128 128;      /* #808080 */
 
-  /* Typeface — Option 3 (Le Néo-Moderne) : Poppins pour les titres, Outfit pour le corps. */
-  --font-sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: 'Poppins', var(--font-sans);
+  /* Typeface — Geist Sans (titres + corps), Geist Mono pour tout ce qui
+     est technique (URLs, codes HTTP, terminal simulé). */
+  --font-sans: 'Geist Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Geist Sans', var(--font-sans);
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
   font-family: var(--font-sans);
   font-feature-settings: 'cv01' 1, 'ss03' 1, 'zero' 1;
 }

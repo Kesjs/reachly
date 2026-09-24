@@ -15,10 +15,10 @@ export const Route = createFileRoute('/')({
 
 function LandingPage() {
   return (
-    <main className="min-h-screen bg-slate-950">
+    <main className="theme-landing min-h-screen bg-canvas">
       <Nav />
       <Hero />
-      <div className="bg-slate-950">
+      <div className="bg-canvas">
         <Problem />
         <HowItWorks />
         <NotJustUptime />

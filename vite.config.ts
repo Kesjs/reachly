@@ -16,6 +16,21 @@ export default defineConfig({
     viteReact(),
   ],
   optimizeDeps: {
-    exclude: ['puppeteer-core'],
+    exclude: ['puppeteer-core', 'playwright-core'],
   },
+  build: {
+    rollupOptions: {
+      external: [
+        'playwright-core',
+        'puppeteer-core',
+        'kerberos',
+        '@mongodb-js/zstd',
+        '@aws-sdk/credential-providers',
+        'snappy',
+        'socks',
+        'aws-crt',
+        'mongodb-client-encryption'
+      ]
+    }
+  }
 })

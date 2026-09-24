@@ -1,13 +1,14 @@
-import { motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 import { CheckCircle2 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
+import { gsap, useMagnetic, useScrollRevealChildren } from '~/lib/landing-gsap'
 
 const features = [
   'QA complet du site',
   'Pages & codes HTTP',
   'Liens morts',
-  'Formulaires & soumissions',
-  'Boutons et appels à l\'action',
+  "Formulaires & soumissions",
+  "Boutons et appels à l'action",
   'Erreurs navigateur',
   'Erreurs réseau',
   'Responsive mobile',
@@ -22,6 +23,23 @@ const features = [
 ]
 
 export function Pricing() {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const featuresRef = useScrollRevealChildren<HTMLDivElement>({ stagger: 0.03, y: 10, start: 'top 75%' })
+  const ctaRef = useMagnetic<HTMLAnchorElement>(0.3)
+
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card) return
+    const tween = gsap.fromTo(
+      card,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, scrollTrigger: { trigger: card, start: 'top 78%' } },
+    )
+    return () => {
+      tween.kill()
+    }
+  }, [])
+
   return (
     <section id="prix" className="py-20 sm:py-28 bg-canvas">
       <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
@@ -34,11 +52,8 @@ export function Pricing() {
           </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+        <div
+          ref={cardRef}
           className="grid overflow-hidden rounded-lg border border-hairline border-border-strong bg-surface md:grid-cols-[1fr_1.4fr]"
         >
           <div className="p-8 border-b md:border-b-0 md:border-r border-hairline border-border flex flex-col justify-between">
@@ -54,6 +69,7 @@ export function Pricing() {
 
             <div className="mt-8 space-y-3">
               <Link
+                ref={ctaRef}
                 to="/signup"
                 className="flex items-center justify-center rounded-md bg-brand px-6 py-3.5 text-base font-medium text-white hover:bg-brand-hover transition-colors"
               >
@@ -64,7 +80,7 @@ export function Pricing() {
           </div>
 
           <div className="p-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+            <div ref={featuresRef} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
               {features.map((feature) => (
                 <div key={feature} className="flex items-start gap-2.5 text-sm text-ink-secondary">
                   <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
@@ -73,7 +89,7 @@ export function Pricing() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="mt-10">
           <p className="text-ink-secondary">

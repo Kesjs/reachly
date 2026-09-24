@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 import { CheckCircle2, XCircle } from 'lucide-react'
+import { gsap } from '~/lib/landing-gsap'
 
 const trail = [
   { text: 'GET / → 200', ok: true },
@@ -25,6 +26,38 @@ const problems = [
 ]
 
 export function Problem() {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const trailRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const panel = panelRef.current
+    const trailEl = trailRef.current
+    if (!panel || !trailEl) return
+
+    const rows = Array.from(trailEl.children)
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        panel,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.4, scrollTrigger: { trigger: panel, start: 'top 82%' } },
+      )
+      gsap.fromTo(
+        rows,
+        { opacity: 0, x: -8 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.3,
+          stagger: 0.18,
+          delay: 0.15,
+          scrollTrigger: { trigger: panel, start: 'top 82%' },
+        },
+      )
+    }, panel)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
     <section id="produit" className="py-20 sm:py-28 bg-canvas">
       <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
@@ -56,17 +89,14 @@ export function Problem() {
             </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
+          <div
+            ref={panelRef}
             className="rounded-lg border border-hairline border-border-strong bg-surface overflow-hidden"
           >
             <div className="border-b border-hairline border-border px-5 py-3">
               <span className="text-xs font-mono text-ink-muted">journal du test — acme-agence.com</span>
             </div>
-            <div className="p-5 space-y-3 font-mono text-sm">
+            <div ref={trailRef} className="p-5 space-y-3 font-mono text-sm">
               {trail.map((step) => (
                 <div key={step.text} className="flex items-center gap-2.5">
                   {step.ok ? (
@@ -85,7 +115,7 @@ export function Problem() {
                 Un test de disponibilité se serait arrêté à la première ligne — la page répond.
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
