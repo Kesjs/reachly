@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+
+const links = [
+  { href: '#produit', label: 'Le problème' },
+  { href: '#comment-ca-marche', label: 'Comment ça marche' },
+  { href: '#prix', label: 'Tarif' },
+]
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false)
-
-  const links = [
-    { href: '#produit', label: 'Le problème' },
-    { href: '#comment-ca-marche', label: 'Comment ça marche' },
-    { href: '#prix', label: 'Tarif' },
-  ]
 
   return (
     <nav className="sticky top-0 z-50 border-b border-hairline border-border bg-canvas/90 backdrop-blur-xl">
@@ -57,40 +56,33 @@ export function Nav() {
         </div>
 
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-hairline border-border"
-          >
-            <div className="space-y-1 px-1 pb-4 pt-3">
-              {links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="block rounded-md px-3 py-2 text-sm text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <div className="my-2 border-t border-hairline border-border" />
-              <Link
-                to="/login"
+          <div className="md:hidden border-t border-hairline border-border space-y-1 px-1 pb-4 pt-3">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
                 className="block rounded-md px-3 py-2 text-sm text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Connexion
-              </Link>
-              <Link
-                to="/signup"
-                className="block rounded-md px-3 py-2 text-sm font-medium text-ink-primary bg-elevated"
-                onClick={() => setIsOpen(false)}
-              >
-                Tester mon site
-              </Link>
-            </div>
-          </motion.div>
+                {link.label}
+              </a>
+            ))}
+            <div className="my-2 border-t border-hairline border-border" />
+            <Link
+              to="/login"
+              className="block rounded-md px-3 py-2 text-sm text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Connexion
+            </Link>
+            <Link
+              to="/signup"
+              className="block rounded-md px-3 py-2 text-sm font-medium text-ink-primary bg-elevated"
+              onClick={() => setIsOpen(false)}
+            >
+              Tester mon site
+            </Link>
+          </div>
         )}
       </div>
     </nav>
