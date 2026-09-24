@@ -1,127 +1,88 @@
 import { motion } from 'framer-motion'
-import { CheckCircle, Zap } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
+const features = [
+  'QA complet du site',
+  'Pages & codes HTTP',
+  'Liens morts',
+  'Formulaires & soumissions',
+  'Boutons et appels à l\'action',
+  'Erreurs navigateur',
+  'Erreurs réseau',
+  'Responsive mobile',
+  'SEO technique de base',
+  'Validation des assets',
+  'Accessibilité de base',
+  'Performance de base',
+  'QA visuel & captures',
+  'Preuves techniques',
+  'Retest inclus',
+  'Rapport prêt à partager',
+]
+
 export function Pricing() {
-  const features = [
-    "Full website QA",
-    "Page & HTTP checks", 
-    "Broken links detection",
-    "Forms & submissions testing",
-    "CTA checks",
-    "Browser errors detection",
-    "Network errors monitoring",
-    "Mobile responsive checks",
-    "Technical SEO basics",
-    "Asset validation",
-    "Accessibility basics",
-    "Performance basics",
-    "Visual QA & screenshots",
-    "Evidence & proof capture",
-    "Retest capability",
-    "Client-ready report"
-  ]
-
   return (
-    <section id="prix" className="py-16 sm:py-24 bg-canvas">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl font-bold text-ink-primary sm:text-4xl font-display mb-4">
-              Pricing simple et transparent
-            </h2>
-            <p className="text-lg text-ink-secondary max-w-2xl mx-auto">
-              Testez vos sites avant livraison sans engagement
-            </p>
-          </motion.div>
+    <section id="prix" className="py-20 sm:py-28 bg-canvas">
+      <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-lg mb-14">
+          <h2 className="text-3xl font-semibold text-ink-primary sm:text-4xl font-display">
+            Un tarif, sans engagement
+          </h2>
+          <p className="mt-4 text-lg text-ink-secondary">
+            Testez un site avant de le livrer. Payez au test, pas à l'abonnement.
+          </p>
         </div>
 
-        <div className="max-w-lg mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="relative rounded-2xl border-2 border-brand/20 bg-surface p-8 shadow-xl"
-          >
-            {/* Popular badge */}
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-              <div className="flex items-center gap-2 rounded-full bg-brand px-4 py-1">
-                <Zap className="h-4 w-4 text-canvas" />
-                <span className="text-sm font-bold text-canvas">RECOMMANDÉ</span>
-              </div>
-            </div>
-
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-ink-primary font-display mb-2">
-                Full QA
-              </h3>
-              <p className="text-ink-secondary mb-6">
-                QA complet pour votre site web
-              </p>
-              
-              <div className="flex items-baseline justify-center gap-1">
-                <span className="text-4xl font-bold text-ink-primary">19€</span>
-                <span className="text-ink-muted">/ site</span>
-              </div>
-              <p className="text-sm text-ink-muted mt-2">
-                Un QA · Un rapport · Un retest inclus
-              </p>
-            </div>
-
-            <div className="space-y-4 mb-8">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature}
-                  initial={{ opacity: 0, x: 10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.4 + index * 0.03 }}
-                  viewport={{ once: true }}
-                  className="flex items-center gap-3"
-                >
-                  <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
-                  <span className="text-sm text-ink-secondary">{feature}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <Link 
-              to="/signup"
-              className="w-full flex items-center justify-center gap-2 rounded-lg bg-brand px-6 py-4 text-lg font-medium text-canvas hover:bg-brand-hover transition-colors"
-            >
-              <Zap className="h-5 w-5" />
-              Commencer maintenant
-            </Link>
-
-            <p className="text-center text-xs text-ink-muted mt-4">
-              Aucun engagement · Paiement sécurisé
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center mt-16"
+          className="grid overflow-hidden rounded-lg border border-hairline border-border-strong bg-surface md:grid-cols-[1fr_1.4fr]"
         >
-          <p className="text-ink-secondary mb-4">
-            Besoin de tester plusieurs sites régulièrement ?
-          </p>
-          <a 
-            href="mailto:contact@reachly.fr" 
-            className="text-brand-text hover:underline font-medium"
-          >
-            Contactez-nous pour un tarif adapté →
-          </a>
+          <div className="p-8 border-b md:border-b-0 md:border-r border-hairline border-border flex flex-col justify-between">
+            <div>
+              <h3 className="text-xl font-semibold text-ink-primary font-display mb-1">Full QA</h3>
+              <p className="text-sm text-ink-secondary mb-6">QA complet pour un site, avant livraison.</p>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-5xl font-semibold text-ink-primary font-display">19€</span>
+                <span className="text-ink-muted">/ site</span>
+              </div>
+              <p className="mt-2 text-sm text-ink-muted">Un QA · un rapport · un retest inclus</p>
+            </div>
+
+            <div className="mt-8 space-y-3">
+              <Link
+                to="/signup"
+                className="flex items-center justify-center rounded-md bg-brand px-6 py-3.5 text-base font-medium text-white hover:bg-brand-hover transition-colors"
+              >
+                Commencer maintenant
+              </Link>
+              <p className="text-center text-xs text-ink-muted">Paiement sécurisé · aucun engagement</p>
+            </div>
+          </div>
+
+          <div className="p-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+              {features.map((feature) => (
+                <div key={feature} className="flex items-start gap-2.5 text-sm text-ink-secondary">
+                  <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
+
+        <div className="mt-10">
+          <p className="text-ink-secondary">
+            Besoin de tester plusieurs sites régulièrement ?{' '}
+            <a href="mailto:contact@reachly.fr" className="text-brand-text hover:underline font-medium">
+              Contactez-nous
+            </a>
+          </p>
+        </div>
       </div>
     </section>
   )

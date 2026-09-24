@@ -1,132 +1,91 @@
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, AlertTriangle, Wrench, Link2, Smartphone } from 'lucide-react'
+import { CheckCircle2, XCircle } from 'lucide-react'
+
+const trail = [
+  { text: 'GET / → 200', ok: true },
+  { text: 'Navigation chargée', ok: true },
+  { text: 'Page /contact accessible', ok: true },
+  { text: 'Formulaire visible', ok: true },
+  { text: 'POST /api/contact → 500', ok: false },
+]
+
+const problems = [
+  {
+    title: 'Un formulaire cassé',
+    description: "La page s'affiche, le formulaire a l'air normal — mais la soumission échoue.",
+  },
+  {
+    title: 'Un lien mort',
+    description: "Un bouton ou un menu renvoie vers une page qui n'existe plus.",
+  },
+  {
+    title: 'Un mobile qui déborde',
+    description: 'Le site fonctionne sur desktop, mais un élément casse la mise en page sur téléphone.',
+  },
+]
 
 export function Problem() {
-  const checkSteps = [
-    { icon: CheckCircle, text: "Site accessible", status: "success" },
-    { icon: CheckCircle, text: "Navigation chargée", status: "success" },
-    { icon: CheckCircle, text: "Pages principales accessibles", status: "success" },
-    { icon: CheckCircle, text: "Formulaire visible", status: "success" },
-    { icon: XCircle, text: "Soumission échoue", status: "error" },
-  ]
-
-  const problems = [
-    {
-      title: "Formulaire cassé",
-      description: "La soumission échoue alors que le formulaire semble fonctionner.",
-      icon: Wrench
-    },
-    {
-      title: "Lien cassé",
-      description: "Une page ou un CTA renvoie vers une URL inexistante.",
-      icon: Link2
-    },
-    {
-      title: "Responsive cassé",
-      description: "Le site fonctionne sur desktop mais un élément déborde ou devient inutilisable sur mobile.",
-      icon: Smartphone
-    }
-  ]
-
   return (
-    <section id="produit" className="py-16 sm:py-24 bg-canvas">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-          {/* Left Column - Content */}
-          <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <h2 className="text-3xl font-bold text-ink-primary sm:text-4xl font-display">
-                Un site peut sembler terminé et pourtant avoir encore plusieurs problèmes.
+    <section id="produit" className="py-20 sm:py-28 bg-canvas">
+      <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-14 lg:grid-cols-2 lg:gap-16 items-start">
+          <div className="space-y-10">
+            <div className="space-y-5 max-w-lg">
+              <h2 className="text-3xl font-semibold text-ink-primary sm:text-4xl font-display leading-tight">
+                Un site peut répondre correctement et être cassé quand même.
               </h2>
-              
-              <p className="text-lg text-ink-secondary">
-                Une page peut s'afficher correctement et masquer pourtant un formulaire cassé, 
-                un lien mort, une erreur JavaScript, un problème mobile ou un bouton qui ne 
-                mène nulle part. Ces petits problèmes apparaissent souvent après la mise en ligne.
+              <p className="text-lg text-ink-secondary leading-relaxed">
+                Un ping ou un simple chargement de page ne révèle rien. Les vrais problèmes
+                apparaissent seulement quand quelqu'un clique, remplit et navigue — ce que fait
+                Reachly, et ce qu'un test de disponibilité ne fait pas.
               </p>
-            </motion.div>
+            </div>
 
-            {/* Problems List */}
             <div className="space-y-6">
-              {problems.map((problem, index) => {
-                const IconComponent = problem.icon
-                return (
-                  <motion.div
-                    key={problem.title}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="flex gap-4"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-elevated text-brand">
-                      <IconComponent className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-ink-primary mb-2">
-                        {problem.title}
-                      </h3>
-                      <p className="text-ink-secondary">
-                        {problem.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                )
-              })}
+              {problems.map((problem) => (
+                <div key={problem.title} className="flex gap-4 border-t border-hairline border-border pt-6 first:border-t-0 first:pt-0">
+                  <div className="pt-1">
+                    <span className="block h-1.5 w-1.5 rounded-full bg-brand" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-ink-primary">{problem.title}</h3>
+                    <p className="mt-1 text-sm text-ink-secondary leading-relaxed">{problem.description}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Right Column - Visual Trail */}
-          <div className="relative">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="rounded-2xl border border-border bg-surface p-8 shadow-lg"
-            >
-              <h3 className="text-xl font-semibold text-ink-primary mb-6 font-display">
-                Check trail
-              </h3>
-              
-              <div className="space-y-4">
-                {checkSteps.map((step, index) => {
-                  const IconComponent = step.icon
-                  const isError = step.status === "error"
-                  
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      className={`flex items-center gap-3 ${isError ? 'text-danger' : 'text-success'}`}
-                    >
-                      <IconComponent className="h-5 w-5" />
-                      <span className={`text-sm ${isError ? 'text-ink-primary font-medium' : 'text-ink-secondary'}`}>
-                        {step.text}
-                      </span>
-                    </motion.div>
-                  )
-                })}
-              </div>
-
-              {/* Visual indicator */}
-              <div className="mt-6 pt-6 border-t border-border">
-                <div className="flex items-center gap-2 text-sm text-ink-muted">
-                  <AlertTriangle className="h-4 w-4 text-warning" />
-                  <span>Un test superficiel n'aurait pas détecté le problème</span>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="rounded-lg border border-hairline border-border-strong bg-surface overflow-hidden"
+          >
+            <div className="border-b border-hairline border-border px-5 py-3">
+              <span className="text-xs font-mono text-ink-muted">journal du test — acme-agence.com</span>
+            </div>
+            <div className="p-5 space-y-3 font-mono text-sm">
+              {trail.map((step) => (
+                <div key={step.text} className="flex items-center gap-2.5">
+                  {step.ok ? (
+                    <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
+                  ) : (
+                    <XCircle className="h-4 w-4 text-danger shrink-0" />
+                  )}
+                  <span className={step.ok ? 'text-ink-secondary' : 'text-ink-primary font-medium'}>
+                    {step.text}
+                  </span>
                 </div>
-              </div>
-            </motion.div>
-          </div>
+              ))}
+            </div>
+            <div className="border-t border-hairline border-border px-5 py-3.5">
+              <p className="text-xs text-ink-muted">
+                Un test de disponibilité se serait arrêté à la première ligne — la page répond.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

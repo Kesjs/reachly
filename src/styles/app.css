@@ -142,6 +142,13 @@ body {
 .hero-reveal > *:nth-child(3) { animation-delay: 160ms; }
 .hero-reveal > *:nth-child(4) { animation-delay: 230ms; }
 
+/* Grain fine du canvas landing — remplace les blobs de gradient flous
+   génériques par une texture d'instrument de mesure, discrète et statique. */
+.landing-grain {
+  background-image: radial-gradient(rgb(var(--color-ink-primary) / 0.05) 0.5px, transparent 0.5px);
+  background-size: 14px 14px;
+}
+
 /* Chiffres tabulaires partout où des valeurs numériques sont comparées
    en colonne (scores, pourcentages, tableaux Performance/Concurrents) */
 .tabular-nums,

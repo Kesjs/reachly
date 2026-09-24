@@ -1,39 +1,34 @@
 import { motion } from 'framer-motion'
 import { Link } from '@tanstack/react-router'
-import { Zap, CheckCircle } from 'lucide-react'
 
 export function FinalCTA() {
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-br from-brand/5 via-canvas to-canvas">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+    <section className="py-20 sm:py-28 bg-canvas">
+      <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="space-y-8"
+          className="rounded-lg border border-hairline border-border-strong bg-surface px-8 py-14 sm:px-14 sm:py-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
         >
-          <h2 className="text-3xl font-bold text-ink-primary sm:text-4xl lg:text-5xl font-display">
-            Votre site est terminé. Est-il vraiment prêt à être livré ?
-          </h2>
-          
-          <p className="text-xl text-ink-secondary max-w-2xl mx-auto">
-            Lancez un Full QA et découvrez les problèmes avant votre client.
-          </p>
+          <div className="max-w-xl">
+            <h2 className="text-3xl font-semibold text-ink-primary sm:text-4xl font-display leading-tight">
+              Votre site est terminé. Est-il vraiment prêt à être livré ?
+            </h2>
+            <p className="mt-4 text-lg text-ink-secondary">
+              Lancez un Full QA et découvrez les problèmes avant votre client.
+            </p>
+          </div>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link 
+          <div className="flex flex-col items-start gap-3 shrink-0">
+            <Link
               to="/signup"
-              className="inline-flex items-center justify-center gap-3 rounded-xl bg-brand px-8 py-4 text-lg font-medium text-canvas hover:bg-brand-hover transition-colors shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center rounded-md bg-brand px-7 py-3.5 text-base font-medium text-white hover:bg-brand-hover transition-colors"
             >
-              <Zap className="h-6 w-6" />
               Tester mon site
             </Link>
-            
-            <div className="flex items-center gap-2 text-ink-muted">
-              <CheckCircle className="h-5 w-5 text-success" />
-              <span>Gratuit pour votre premier test</span>
-            </div>
+            <span className="text-sm text-ink-muted">Premier test offert</span>
           </div>
         </motion.div>
       </div>
@@ -44,97 +39,33 @@ export function FinalCTA() {
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
-  const links = {
-    product: [
-      { name: 'Comment ça marche', href: '#comment-ca-marche' },
-      { name: 'Prix', href: '#prix' },
-      { name: 'FAQ', href: '#faq' }
-    ],
-    legal: [
-      { name: 'Mentions légales', href: '/mentions-legales' },
-      { name: 'Confidentialité', href: '/confidentialite' },
-      { name: 'CGV', href: '/cgv' }
-    ],
-    support: [
-      { name: 'Contact', href: 'mailto:contact@reachly.fr' },
-      { name: 'Documentation', href: '#' },
-      { name: 'Statut', href: '#' }
-    ]
-  }
-
   return (
-    <footer className="border-t border-border bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <div className="mb-4">
-              <span className="text-xl font-bold text-ink-primary font-display">
-                Reachly
-              </span>
-            </div>
-            <p className="text-sm text-ink-muted leading-relaxed">
-              QA automatisé de sites web avant livraison.
-            </p>
-          </div>
+    <footer className="border-t border-hairline border-border bg-canvas">
+      <div className="mx-auto max-w-1200 px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Link to="/" className="text-sm font-semibold text-ink-primary font-display">
+            Reachly
+          </Link>
 
-          {/* Links */}
-          <div className="grid gap-8 sm:grid-cols-3 lg:col-span-3">
-            <div>
-              <h3 className="text-sm font-semibold text-ink-primary mb-3">Produit</h3>
-              <ul className="space-y-2">
-                {links.product.map((link) => (
-                  <li key={link.name}>
-                    <a 
-                      href={link.href}
-                      className="text-sm text-ink-muted hover:text-ink-primary transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-ink-primary mb-3">Support</h3>
-              <ul className="space-y-2">
-                {links.support.map((link) => (
-                  <li key={link.name}>
-                    <a 
-                      href={link.href}
-                      className="text-sm text-ink-muted hover:text-ink-primary transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-ink-primary mb-3">Légal</h3>
-              <ul className="space-y-2">
-                {links.legal.map((link) => (
-                  <li key={link.name}>
-                    <Link 
-                      to={link.href}
-                      className="text-sm text-ink-muted hover:text-ink-primary transition-colors"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-secondary">
+            <Link to="/tarifs" className="hover:text-ink-primary transition-colors">
+              Tarifs
+            </Link>
+            <Link to="/mentions-legales" className="hover:text-ink-primary transition-colors">
+              Mentions légales
+            </Link>
+            <Link to="/cgv" className="hover:text-ink-primary transition-colors">
+              CGV
+            </Link>
+            <Link to="/confidentialite" className="hover:text-ink-primary transition-colors">
+              Confidentialité
+            </Link>
+          </nav>
         </div>
 
-        <div className="mt-12 border-t border-border pt-8">
-          <p className="text-center text-sm text-ink-muted">
-            © {currentYear} Reachly. Tous droits réservés.
-          </p>
-        </div>
+        <p className="mt-6 text-center sm:text-left text-xs text-ink-muted">
+          © {currentYear} Reachly. Tous droits réservés.
+        </p>
       </div>
     </footer>
   )

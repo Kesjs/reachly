@@ -6,104 +6,88 @@ import { Menu, X } from 'lucide-react'
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false)
 
+  const links = [
+    { href: '#produit', label: 'Le problème' },
+    { href: '#comment-ca-marche', label: 'Comment ça marche' },
+    { href: '#prix', label: 'Tarif' },
+  ]
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-50 border-b border-hairline border-border bg-canvas/90 backdrop-blur-xl">
+      <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-white font-display">
-              Reachly
+          <Link to="/" className="flex items-center gap-2 text-base font-semibold text-ink-primary font-display">
+            <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-brand text-[11px] font-bold text-canvas">
+              R
+            </span>
+            Reachly
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm text-ink-secondary hover:text-ink-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="hidden md:flex items-center gap-6">
+            <Link to="/login" className="text-sm text-ink-secondary hover:text-ink-primary transition-colors">
+              Connexion
+            </Link>
+            <Link
+              to="/signup"
+              className="rounded-md border border-hairline border-border-strong bg-surface px-4 py-2 text-sm font-medium text-ink-primary hover:bg-elevated transition-colors"
+            >
+              Tester mon site
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-8">
-              <a href="#produit" className="text-slate-400 hover:text-white transition-colors text-sm">
-                Product
-              </a>
-              <a href="#comment-ca-marche" className="text-slate-400 hover:text-white transition-colors text-sm">
-                How it works
-              </a>
-              <a href="#prix" className="text-slate-400 hover:text-white transition-colors text-sm">
-                Pricing
-              </a>
-            </div>
-          </div>
-
-          {/* CTA & Login */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link 
-              to="/login" 
-              className="text-slate-400 hover:text-white transition-colors text-sm"
-            >
-              Log in
-            </Link>
-            <Link 
-              to="/signup" 
-              className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
-            >
-              Test your site
-            </Link>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-400 hover:text-white"
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-ink-secondary hover:text-ink-primary"
+            aria-label="Menu"
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-slate-800 bg-slate-950/95 backdrop-blur-xl"
+            className="md:hidden border-t border-hairline border-border"
           >
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              <a
-                href="#produit"
-                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Product
-              </a>
-              <a
-                href="#comment-ca-marche"
-                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                How it works
-              </a>
-              <a
-                href="#prix"
-                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Pricing
-              </a>
-              <hr className="border-slate-800" />
+            <div className="space-y-1 px-1 pb-4 pt-3">
+              {links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="block rounded-md px-3 py-2 text-sm text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <div className="my-2 border-t border-hairline border-border" />
               <Link
                 to="/login"
-                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
+                className="block rounded-md px-3 py-2 text-sm text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Log in
+                Connexion
               </Link>
               <Link
                 to="/signup"
-                className="block rounded-md px-3 py-2 bg-brand text-white font-medium hover:bg-brand-hover transition-colors"
+                className="block rounded-md px-3 py-2 text-sm font-medium text-ink-primary bg-elevated"
                 onClick={() => setIsOpen(false)}
               >
-                Test your site
+                Tester mon site
               </Link>
             </div>
           </motion.div>

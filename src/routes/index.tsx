@@ -15,7 +15,7 @@ export const Route = createFileRoute('/')({
 
 function LandingPage() {
   return (
-    <main className="min-h-screen bg-slate-950">
+    <main className="theme-reachly min-h-screen bg-canvas">
       <Nav />
       <Hero />
       <Problem />
