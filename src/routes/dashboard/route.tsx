@@ -20,6 +20,11 @@ function DashboardLayout() {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
+    if (localStorage.getItem('simulation_mode')) {
+      setIsAuthenticated(true)
+      return
+    }
+
     const supabase = getSupabaseBrowserClient()
     supabase.auth.getUser().then(({ data }) => {
       if (data?.user) {
