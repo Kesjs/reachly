@@ -36,14 +36,6 @@ const runs: Run[] = [
     },
   },
   {
-    site: 'agence-lumen.com',
-    pages: 31,
-    checks: 184,
-    issues: 0,
-    status: 'pass',
-    fixedNote: '4 problèmes corrigés depuis le dernier test · retest inclus',
-  },
-  {
     site: 'boutique-nova.fr',
     pages: 18,
     checks: 142,
@@ -54,14 +46,6 @@ const runs: Run[] = [
       detail: 'Débordement détecté à 375px de large',
       note: 'Le site fonctionne en desktop, pas encore sur mobile.',
     },
-  },
-  {
-    site: 'boutique-nova.fr',
-    pages: 18,
-    checks: 142,
-    issues: 0,
-    status: 'pass',
-    fixedNote: '2 problèmes corrigés depuis le dernier test · retest inclus',
   },
 ]
 
@@ -77,46 +61,14 @@ function usePrefersReducedMotion() {
   return reduced
 }
 
-function ReportPanel() {
-  const reducedMotion = usePrefersReducedMotion()
-  const [runIndex, setRunIndex] = useState(0)
-  const [phase, setPhase] = useState<'scanning' | 'result'>('scanning')
-  const run = runs[runIndex]
-
-  useEffect(() => {
-    if (reducedMotion) return
-    let timers: ReturnType<typeof setTimeout>[] = []
-
-    if (phase === 'scanning') {
-      timers.push(setTimeout(() => setPhase('result'), pipeline.length * 220 + 300))
-    } else {
-      timers.push(
-        setTimeout(() => {
-          setRunIndex((i) => (i + 1) % runs.length)
-          setPhase('scanning')
-        }, 3400)
-      )
-    }
-    return () => timers.forEach(clearTimeout)
-  }, [phase, reducedMotion])
-
+function ReportPanel({ run, phase, reducedMotion }: { run: Run; phase: 'scanning' | 'result'; reducedMotion: boolean }) {
   return (
     <div className="relative rounded-lg border border-hairline border-border-strong bg-surface shadow-2xl shadow-black/40 overflow-hidden">
       <div className="flex items-center justify-between border-b border-hairline border-border px-4 py-3">
         <div className="flex items-center gap-2 text-xs text-ink-muted font-mono">
           <span className={`h-2 w-2 rounded-full ${run.status === 'fail' ? 'bg-danger' : 'bg-success'}`} />
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={run.site}
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.25 }}
-            >
-              {run.site}
-            </motion.span>
-          </AnimatePresence>
-          <span className="text-ink-muted/60">· rapport #{1847 + runIndex}</span>
+          <span>{run.site}</span>
+          <span className="text-ink-muted/60">· rapport #1847</span>
         </div>
         <span className="text-xs text-ink-muted font-mono tabular-nums">
           {phase === 'scanning' ? 'en cours…' : 'terminé'}
@@ -136,7 +88,7 @@ function ReportPanel() {
         <AnimatePresence mode="wait">
           {phase === 'scanning' ? (
             <motion.div
-              key={`scan-${runIndex}`}
+              key={`scan-${run.site}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -163,7 +115,7 @@ function ReportPanel() {
             </motion.div>
           ) : (
             <motion.div
-              key={`result-${runIndex}`}
+              key={`result-${run.site}`}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
@@ -224,7 +176,80 @@ function ReportPanel() {
   )
 }
 
+function StaticReportPanel({ run }: { run: Run }) {
+  return (
+    <div className="relative rounded-lg border border-hairline border-border-strong bg-surface/90 backdrop-blur-sm shadow-xl overflow-hidden opacity-60">
+      <div className="flex items-center justify-between border-b border-hairline border-border px-4 py-3">
+        <div className="flex items-center gap-2 text-xs text-ink-muted font-mono">
+          <span className={`h-2 w-2 rounded-full ${run.status === 'fail' ? 'bg-danger' : 'bg-success'}`} />
+          <span>{run.site}</span>
+          <span className="text-ink-muted/60">· rapport #1846</span>
+        </div>
+        <span className="text-xs text-ink-muted font-mono tabular-nums">
+          terminé
+        </span>
+      </div>
+
+      <div className="relative p-5">
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: 'Pages', value: run.pages },
+            { label: 'Vérifications', value: run.checks },
+            { label: 'Problèmes', value: run.issues, danger: run.issues > 0 },
+          ].map((s) => (
+            <div key={s.label}>
+              <p className={`text-xl font-semibold font-display tabular-nums ${s.danger ? 'text-danger' : 'text-ink-primary'}`}>
+                {s.value}
+              </p>
+              <p className="text-[11px] text-ink-muted">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {run.status === 'fail' && run.issue ? (
+          <div className="mt-4 rounded-md border border-danger/25 bg-danger/5 p-3.5">
+            <div className="flex items-start gap-2.5">
+              <XCircle className="h-4 w-4 text-danger mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-ink-primary">{run.issue.title}</p>
+                <p className="mt-1 text-xs text-ink-muted font-mono">{run.issue.detail}</p>
+              </div>
+            </div>
+          </div>
+        ) : run.fixedNote ? (
+          <div className="mt-4 rounded-md border border-success/25 bg-success/5 p-3.5 flex items-start gap-2.5">
+            <CheckCircle2 className="h-4 w-4 text-success mt-0.5 shrink-0" />
+            <p className="text-sm text-ink-secondary">{run.fixedNote}</p>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 export function Hero() {
+  const reducedMotion = usePrefersReducedMotion()
+  const [animatedRunIndex, setAnimatedRunIndex] = useState(0)
+  const [animatedPhase, setAnimatedPhase] = useState<'scanning' | 'result'>('scanning')
+  const animatedRun = runs[animatedRunIndex]
+
+  useEffect(() => {
+    if (reducedMotion) return
+    let timers: ReturnType<typeof setTimeout>[] = []
+
+    if (animatedPhase === 'scanning') {
+      timers.push(setTimeout(() => setAnimatedPhase('result'), pipeline.length * 220 + 300))
+    } else {
+      timers.push(
+        setTimeout(() => {
+          setAnimatedRunIndex((i) => (i + 1) % runs.length)
+          setAnimatedPhase('scanning')
+        }, 3400)
+      )
+    }
+    return () => timers.forEach(clearTimeout)
+  }, [animatedPhase, reducedMotion])
+
   return (
     <section className="relative overflow-hidden py-20 sm:py-28 lg:py-32">
       <BeamsBackground intensity="medium">
@@ -272,9 +297,40 @@ export function Hero() {
             </p>
           </div>
 
-          {/* Right column — live report panel */}
+          {/* Right column — multiple report panels */}
           <div className="relative">
-            <ReportPanel />
+            {/* Main animated panel */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="relative z-10"
+            >
+              <ReportPanel run={animatedRun} phase={animatedPhase} reducedMotion={reducedMotion} />
+            </motion.div>
+
+            {/* Static panels layered behind */}
+            <div className="absolute inset-0 -translate-x-4 -translate-y-4 scale-95 opacity-40">
+              <StaticReportPanel run={runs[1]} />
+            </div>
+            
+            <div className="absolute inset-0 translate-x-4 translate-y-4 scale-95 opacity-30">
+              <StaticReportPanel run={runs[0]} />
+            </div>
+
+            {/* Another animated panel offset */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 0.6, x: 10 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="absolute inset-0 translate-x-6 translate-y-6 scale-90 z-0"
+            >
+              <ReportPanel 
+                run={runs[(animatedRunIndex + 1) % runs.length]} 
+                phase={animatedPhase === 'scanning' ? 'result' : 'scanning'} 
+                reducedMotion={reducedMotion} 
+              />
+            </motion.div>
           </div>
         </div>
       </div>
