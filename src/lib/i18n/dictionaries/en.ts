@@ -191,7 +191,8 @@ export const en = {
   ctaFinal: {
     heading: "Find out what AI is saying about your brand.",
     subheading: "Analyze your site, select your key questions, and get your first AI visibility score today.",
-    cta: "Analyze my site"
+    cta: "Analyze my site",
+    models: "Engines analyzed continuously"
   },
   footer: {
     columns: {

@@ -123,7 +123,7 @@ function SiteWorkspace() {
 
       {/* Content */}
       <div className="mx-auto max-w-6xl px-6 py-8">
-        {activeTab === 'overview' && <OverviewTab site={site} />}
+        {activeTab === 'overview' && <OverviewTab site={site} onNavigateToIssues={() => setActiveTab('issues')} />}
         {activeTab === 'issues' && <IssuesTab site={site} />}
         {activeTab === 'checks' && <ChecksTab site={site} />}
         {activeTab === 'pages' && <PagesTab site={site} />}
@@ -134,7 +134,7 @@ function SiteWorkspace() {
   )
 }
 
-function OverviewTab({ site }: { site: Site }) {
+function OverviewTab({ site, onNavigateToIssues }: { site: Site; onNavigateToIssues: () => void }) {
   const lastScan = site.lastScan
   const isReadyToShip = lastScan && lastScan.issues === 0
   
@@ -277,7 +277,7 @@ function OverviewTab({ site }: { site: Site }) {
             
             {lastScan.allIssues.filter(i => i.severity === 'critical').length > 3 && (
               <button 
-                onClick={() => setActiveTab('issues')}
+                onClick={onNavigateToIssues}
                 className="text-sm text-brand-text hover:underline"
               >
                 Voir tous les problèmes critiques →

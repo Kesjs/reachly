@@ -142,7 +142,8 @@ function SiteCard({ website, index }: { website: Site; index: number }) {
 
       {/* Actions */}
       <Link
-        to={`/app/sites/${website.id}`}
+        to="/app/sites/$siteId"
+        params={{ siteId: website.id }}
         className="inline-flex items-center justify-center w-full rounded-lg border border-border bg-elevated px-4 py-2 text-sm font-medium text-ink-primary transition-colors hover:bg-surface hover:border-border-strong"
       >
         Ouvrir workspace

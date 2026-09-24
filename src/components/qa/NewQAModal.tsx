@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Globe, Play, AlertCircle } from 'lucide-react'
 import { QAWorkflowStates } from './QAWorkflowStates'
 import { Checkbox } from '~/components/ui/checkbox'
-import type { ScanStatus } from '~/lib/types/qa'
+import type { ScanStatus } from '~/lib/qa/types'
 import { createSite, startQAScan, getScanStatus } from '~/lib/api/qa'
 import { validateUrl } from '~/lib/qa/utils'
 
@@ -17,7 +17,7 @@ interface NewQAModalProps {
 export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalProps) {
   const [step, setStep] = useState<'input' | 'scanning' | 'success' | 'error'>('input')
   const [url, setUrl] = useState('')
-  const [scanStatus, setScanStatus] = useState<ScanStatus>('idle')
+  const [scanStatus, setScanStatus] = useState<ScanStatus>('created')
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [siteId, setSiteId] = useState<string | null>(null)
@@ -127,7 +127,7 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
   const handleReset = () => {
     setStep('input')
     setUrl('')
-    setScanStatus('idle')
+    setScanStatus('created')
     setProgress(0)
     setError(null)
     setSiteId(null)

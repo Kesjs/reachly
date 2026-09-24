@@ -1,5 +1,8 @@
 // Types pour le système QA
-export type ScanStatus = 'idle' | 'discovering' | 'testing' | 'forms' | 'browser' | 'visual' | 'finalizing' | 'completed' | 'partial' | 'failed' | 'blocked'
+// ScanStatus n'est plus défini ici : le moteur QA (src/lib/qa/types) est la seule
+// source de vérité, car ce sont ses valeurs qui transitent réellement via le polling.
+import type { ScanStatus } from '~/lib/qa/types'
+export type { ScanStatus } from '~/lib/qa/types'
 
 export type CheckStatus = 'passed' | 'warning' | 'failed' | 'skipped' | 'running'
 

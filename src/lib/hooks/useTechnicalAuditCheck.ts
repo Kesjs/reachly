@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { triggerSiteCrawl, processNextPage } from '~/lib/crawler/orchestrate'
+// import { triggerSiteCrawl, processNextPage } from '~/lib/crawler/orchestrate'
 
 // Extrait de TechnicalAuditCard : la logique de déclenchement/poll du crawl
 // est identique que ce soit depuis la carte compacte de l'Accueil ou depuis
@@ -11,16 +11,22 @@ export function useTechnicalAuditCheck(brandId: string) {
   const [isChecking, setIsChecking] = useState(false)
 
   const checkMutation = useMutation({
-    mutationFn: () => triggerSiteCrawl({ data: { brandId } }),
-    onSuccess: async (result) => {
+    mutationFn: async () => {
+      // TODO: Implement triggerSiteCrawl when the module is available
+      // return triggerSiteCrawl({ data: { brandId } })
+      throw new Error('Crawler orchestration module not yet implemented')
+    },
+    onSuccess: async (result: any) => {
       setIsChecking(true)
       let done = false
       const runId = result.runId
 
       while (!done) {
         try {
-          const res = await processNextPage({ data: { runId } })
-          done = res.done
+          // TODO: Implement processNextPage when the module is available
+          // const res = await processNextPage({ data: { runId } })
+          // done = res.done
+          done = true // Temporary placeholder
         } catch (err) {
           console.error(err)
           break

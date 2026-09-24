@@ -82,14 +82,14 @@ function AddFormPage() {
     setStep('testing')
     setIsLoading(true)
 
-    const steps = [
-      { name: 'Page is reachable', status: 'pending' as const },
-      { name: 'Form detected', status: 'pending' as const },
-      { name: 'Fields identified', status: 'pending' as const },
-      { name: 'Test data generated', status: 'pending' as const },
-      { name: 'Submitting form', status: 'pending' as const },
-      { name: 'Checking response', status: 'pending' as const },
-      { name: 'Checking network', status: 'pending' as const },
+    const steps: { name: string; status: 'pending' | 'success' | 'error'; message?: string }[] = [
+      { name: 'Page is reachable', status: 'pending' },
+      { name: 'Form detected', status: 'pending' },
+      { name: 'Fields identified', status: 'pending' },
+      { name: 'Test data generated', status: 'pending' },
+      { name: 'Submitting form', status: 'pending' },
+      { name: 'Checking response', status: 'pending' },
+      { name: 'Checking network', status: 'pending' },
     ]
 
     setTestResult({ success: false, steps })

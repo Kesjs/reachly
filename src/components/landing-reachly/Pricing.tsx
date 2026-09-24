@@ -66,7 +66,7 @@ export function Pricing() {
               </p>
               
               <div className="flex items-baseline justify-center gap-1">
-                <span className="text-4xl font-bold text-ink-primary">29€</span>
+                <span className="text-4xl font-bold text-ink-primary">19€</span>
                 <span className="text-ink-muted">/ site</span>
               </div>
               <p className="text-sm text-ink-muted mt-2">

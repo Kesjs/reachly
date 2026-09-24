@@ -20,6 +20,7 @@ interface ScanOptions {
   url: string;
   previousScanId?: string;
   config?: QAConfigManager;
+  consentConfirmedAt?: string | null;
 }
 
 export class QAOrchestrator {
@@ -38,7 +39,7 @@ export class QAOrchestrator {
   }
 
   async runScan(options: ScanOptions): Promise<ScanResult> {
-    const { siteId, userId, url, previousScanId } = options;
+    const { siteId, userId, url, previousScanId, consentConfirmedAt } = options;
 
     // Créer le scan en base de données
     const { data: scan, error: scanError } = await this.supabase
@@ -47,7 +48,8 @@ export class QAOrchestrator {
         site_id: siteId,
         user_id: userId,
         status: 'created' as ScanStatus,
-        previous_scan_id: previousScanId || null
+        previous_scan_id: previousScanId || null,
+        consent_confirmed_at: consentConfirmedAt || null
       })
       .select('id')
       .single() as any;

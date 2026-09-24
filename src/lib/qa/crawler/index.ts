@@ -7,7 +7,7 @@ export class CrawlerEngine {
   private context: BrowserContext | null = null;
   private config: QAConfigManager;
   private visitedUrls: Set<string> = new Set();
-  private queue: string[] = [];
+  private queue: { url: string; depth: number }[] = [];
   private crawledPages: PageResult[] = [];
 
   constructor(config: QAConfigManager) {

@@ -7,933 +7,377 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
-      api_usage_log: {
+      checks: {
         Row: {
-          brand_id: string
-          call_type: string
-          created_at: string
-          estimated_cost_usd: number
+          category: string
+          created_at: string | null
+          duration_ms: number | null
           id: string
-          model: string
-          tokens_input: number
-          tokens_output: number
-          user_id: string
-        }
-        Insert: {
-          brand_id: string
-          call_type: string
-          created_at?: string
-          estimated_cost_usd?: number
-          id?: string
-          model: string
-          tokens_input?: number
-          tokens_output?: number
-          user_id: string
-        }
-        Update: {
-          brand_id?: string
-          call_type?: string
-          created_at?: string
-          estimated_cost_usd?: number
-          id?: string
-          model?: string
-          tokens_input?: number
-          tokens_output?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "api_usage_log_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "api_usage_log_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      brand_bot_access: {
-        Row: {
-          bot_rules: Json
-          brand_id: string
-          checked_at: string
-          created_at: string
-          id: string
-          llms_txt_found: boolean
-        }
-        Insert: {
-          bot_rules?: Json
-          brand_id: string
-          checked_at?: string
-          created_at?: string
-          id?: string
-          llms_txt_found?: boolean
-        }
-        Update: {
-          bot_rules?: Json
-          brand_id?: string
-          checked_at?: string
-          created_at?: string
-          id?: string
-          llms_txt_found?: boolean
-        }
-        Relationships: [
-          {
-            foreignKeyName: "brand_bot_access_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: true
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      brands: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-          owner_id: string
-          plan: string
-          updated_at: string
-          website_url: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-          owner_id: string
-          plan?: string
-          updated_at?: string
-          website_url?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          owner_id?: string
-          plan?: string
-          updated_at?: string
-          website_url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "brands_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      competitors: {
-        Row: {
-          brand_id: string
-          first_seen_at: string
-          hidden: boolean
-          id: string
-          name: string
-        }
-        Insert: {
-          brand_id: string
-          first_seen_at?: string
-          hidden?: boolean
-          id?: string
-          name: string
-        }
-        Update: {
-          brand_id?: string
-          first_seen_at?: string
-          hidden?: boolean
-          id?: string
-          name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "competitors_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      events: {
-        Row: {
-          brand_id: string
-          created_at: string
-          id: string
+          key: string
           message: string | null
-          read: boolean
-          show_history: boolean
-          show_notification: boolean
-          show_toast: boolean
-          source_id: string | null
-          source_type: string
-          title: string
-          type: string
-        }
-        Insert: {
-          brand_id: string
-          created_at?: string
-          id?: string
-          message?: string | null
-          read?: boolean
-          show_history?: boolean
-          show_notification?: boolean
-          show_toast?: boolean
-          source_id?: string | null
-          source_type: string
-          title: string
-          type: string
-        }
-        Update: {
-          brand_id?: string
-          created_at?: string
-          id?: string
-          message?: string | null
-          read?: boolean
-          show_history?: boolean
-          show_notification?: boolean
-          show_toast?: boolean
-          source_id?: string | null
-          source_type?: string
-          title?: string
-          type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "events_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      measurement_runs: {
-        Row: {
-          brand_id: string
-          completed_at: string | null
-          created_at: string
-          id: string
-          linked_change_id: string | null
-          questions_completed: number
-          questions_total: number
-          score: number | null
-          score_delta: number | null
-          started_at: string
+          page_id: string | null
+          scan_id: string
+          severity: string | null
           status: string
-          triggered_by: string
+          title: string | null
         }
         Insert: {
-          brand_id: string
-          completed_at?: string | null
-          created_at?: string
+          category: string
+          created_at?: string | null
+          duration_ms?: number | null
           id?: string
-          linked_change_id?: string | null
-          questions_completed?: number
-          questions_total?: number
-          score?: number | null
-          score_delta?: number | null
-          started_at?: string
-          status?: string
-          triggered_by?: string
-        }
-        Update: {
-          brand_id?: string
-          completed_at?: string | null
-          created_at?: string
-          id?: string
-          linked_change_id?: string | null
-          questions_completed?: number
-          questions_total?: number
-          score?: number | null
-          score_delta?: number | null
-          started_at?: string
-          status?: string
-          triggered_by?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "measurement_runs_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "measurement_runs_linked_change_id_fkey"
-            columns: ["linked_change_id"]
-            isOneToOne: false
-            referencedRelation: "site_changes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      notification_preferences: {
-        Row: {
-          brand_id: string
-          created_at: string
-          email_enabled: boolean
-          id: string
-          notify_billing: boolean
-          notify_measurement_run: boolean
-          notify_opportunity: boolean
-          notify_site_change: boolean
-          updated_at: string
-        }
-        Insert: {
-          brand_id: string
-          created_at?: string
-          email_enabled?: boolean
-          id?: string
-          notify_billing?: boolean
-          notify_measurement_run?: boolean
-          notify_opportunity?: boolean
-          notify_site_change?: boolean
-          updated_at?: string
-        }
-        Update: {
-          brand_id?: string
-          created_at?: string
-          email_enabled?: boolean
-          id?: string
-          notify_billing?: boolean
-          notify_measurement_run?: boolean
-          notify_opportunity?: boolean
-          notify_site_change?: boolean
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notification_preferences_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: true
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      observation_competitors: {
-        Row: {
-          competitor_id: string
-          context_excerpt: string | null
-          id: string
-          mentioned: boolean
-          observation_id: string
-          position: number | null
-          recommended: boolean
-        }
-        Insert: {
-          competitor_id: string
-          context_excerpt?: string | null
-          id?: string
-          mentioned?: boolean
-          observation_id: string
-          position?: number | null
-          recommended?: boolean
-        }
-        Update: {
-          competitor_id?: string
-          context_excerpt?: string | null
-          id?: string
-          mentioned?: boolean
-          observation_id?: string
-          position?: number | null
-          recommended?: boolean
-        }
-        Relationships: [
-          {
-            foreignKeyName: "observation_competitors_competitor_id_fkey"
-            columns: ["competitor_id"]
-            isOneToOne: false
-            referencedRelation: "competitors"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "observation_competitors_observation_id_fkey"
-            columns: ["observation_id"]
-            isOneToOne: false
-            referencedRelation: "observations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      observation_samples: {
-        Row: {
-          brand_mentioned: boolean
-          brand_position: number | null
-          brand_recommended: boolean
-          created_at: string
-          engine: string
-          id: string
-          observation_id: string
-          raw_answer: string | null
-          sample_index: number
-        }
-        Insert: {
-          brand_mentioned?: boolean
-          brand_position?: number | null
-          brand_recommended?: boolean
-          created_at?: string
-          engine?: string
-          id?: string
-          observation_id: string
-          raw_answer?: string | null
-          sample_index: number
-        }
-        Update: {
-          brand_mentioned?: boolean
-          brand_position?: number | null
-          brand_recommended?: boolean
-          created_at?: string
-          engine?: string
-          id?: string
-          observation_id?: string
-          raw_answer?: string | null
-          sample_index?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "observation_samples_observation_id_fkey"
-            columns: ["observation_id"]
-            isOneToOne: false
-            referencedRelation: "observations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      observations: {
-        Row: {
-          agreement_score: number | null
-          brand_mentioned: boolean
-          brand_position: number | null
-          brand_recommended: boolean
-          created_at: string
-          engine: string
-          id: string
-          question_id: string
-          raw_answer: string | null
-          run_id: string
-          samples_count: number
-          themes: string[]
-        }
-        Insert: {
-          agreement_score?: number | null
-          brand_mentioned?: boolean
-          brand_position?: number | null
-          brand_recommended?: boolean
-          created_at?: string
-          engine?: string
-          id?: string
-          question_id: string
-          raw_answer?: string | null
-          run_id: string
-          samples_count?: number
-          themes?: string[]
-        }
-        Update: {
-          agreement_score?: number | null
-          brand_mentioned?: boolean
-          brand_position?: number | null
-          brand_recommended?: boolean
-          created_at?: string
-          engine?: string
-          id?: string
-          question_id?: string
-          raw_answer?: string | null
-          run_id?: string
-          samples_count?: number
-          themes?: string[]
-        }
-        Relationships: [
-          {
-            foreignKeyName: "observations_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "observations_run_id_fkey"
-            columns: ["run_id"]
-            isOneToOne: false
-            referencedRelation: "measurement_runs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      opportunities: {
-        Row: {
-          brand_id: string
-          confidence: number
-          created_at: string
-          current_site_content: string | null
-          id: string
-          observations_count: number
-          priority: string
-          proposed_direction: string
-          reason: string
-          resolved_at: string | null
+          key: string
+          message?: string | null
+          page_id?: string | null
+          scan_id: string
+          severity?: string | null
           status: string
-          title: string
-          updated_at: string
+          title?: string | null
         }
-        Insert: {
-          brand_id: string
-          confidence?: number
-          created_at?: string
-          current_site_content?: string | null
+        Update: {
+          category?: string
+          created_at?: string | null
+          duration_ms?: number | null
           id?: string
-          observations_count?: number
-          priority: string
-          proposed_direction: string
-          reason: string
-          resolved_at?: string | null
+          key?: string
+          message?: string | null
+          page_id?: string | null
+          scan_id?: string
+          severity?: string | null
           status?: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          brand_id?: string
-          confidence?: number
-          created_at?: string
-          current_site_content?: string | null
-          id?: string
-          observations_count?: number
-          priority?: string
-          proposed_direction?: string
-          reason?: string
-          resolved_at?: string | null
-          status?: string
-          title?: string
-          updated_at?: string
+          title?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "opportunities_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      opportunity_actionable_content: {
-        Row: {
-          content: string
-          created_at: string
-          filename: string | null
-          id: string
-          instructions: string | null
-          label: string
-          opportunity_id: string
-          plan: string
-          source_content_hash: string | null
-          type: string
-          updated_at: string
-        }
-        Insert: {
-          content: string
-          created_at?: string
-          filename?: string | null
-          id?: string
-          instructions?: string | null
-          label: string
-          opportunity_id: string
-          plan?: string
-          source_content_hash?: string | null
-          type: string
-          updated_at?: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          filename?: string | null
-          id?: string
-          instructions?: string | null
-          label?: string
-          opportunity_id?: string
-          plan?: string
-          source_content_hash?: string | null
-          type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "opportunity_actionable_content_opportunity_id_fkey"
-            columns: ["opportunity_id"]
-            isOneToOne: true
-            referencedRelation: "opportunities"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      opportunity_evidence: {
-        Row: {
-          content: string | null
-          created_at: string
-          id: string
-          label: string
-          opportunity_id: string
-          step_order: number
-          step_type: string
-        }
-        Insert: {
-          content?: string | null
-          created_at?: string
-          id?: string
-          label: string
-          opportunity_id: string
-          step_order: number
-          step_type: string
-        }
-        Update: {
-          content?: string | null
-          created_at?: string
-          id?: string
-          label?: string
-          opportunity_id?: string
-          step_order?: number
-          step_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "opportunity_evidence_opportunity_id_fkey"
-            columns: ["opportunity_id"]
-            isOneToOne: false
-            referencedRelation: "opportunities"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      opportunity_questions: {
-        Row: {
-          opportunity_id: string
-          question_id: string
-        }
-        Insert: {
-          opportunity_id: string
-          question_id: string
-        }
-        Update: {
-          opportunity_id?: string
-          question_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "opportunity_questions_opportunity_id_fkey"
-            columns: ["opportunity_id"]
-            isOneToOne: false
-            referencedRelation: "opportunities"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "opportunity_questions_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          created_at: string
-          email: string
-          full_name: string | null
-          id: string
-          is_admin: boolean
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          full_name?: string | null
-          id: string
-          is_admin?: boolean
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          full_name?: string | null
-          id?: string
-          is_admin?: boolean
-        }
-        Relationships: []
-      }
-      questions: {
-        Row: {
-          active: boolean
-          brand_id: string
-          created_at: string
-          id: string
-          position: number
-          text: string
-        }
-        Insert: {
-          active?: boolean
-          brand_id: string
-          created_at?: string
-          id?: string
-          position?: number
-          text: string
-        }
-        Update: {
-          active?: boolean
-          brand_id?: string
-          created_at?: string
-          id?: string
-          position?: number
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "questions_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      signup_attempts: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          ip_address: string
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          ip_address: string
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          ip_address?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      site_changes: {
-        Row: {
-          after_snippet: string | null
-          before_snippet: string | null
-          brand_id: string
-          change_type: string
-          changed_fields: string[] | null
-          confidence: number
-          crawl_run_id: string | null
-          created_at: string
-          detected_at: string
-          detection_method: string
-          id: string
-          importance: string
-          linked_run_id: string | null
-          new_content: Json | null
-          old_content: Json | null
-          page_id: string
-        }
-        Insert: {
-          after_snippet?: string | null
-          before_snippet?: string | null
-          brand_id: string
-          change_type: string
-          changed_fields?: string[] | null
-          confidence?: number
-          crawl_run_id?: string | null
-          created_at?: string
-          detected_at?: string
-          detection_method: string
-          id?: string
-          importance: string
-          linked_run_id?: string | null
-          new_content?: Json | null
-          old_content?: Json | null
-          page_id: string
-        }
-        Update: {
-          after_snippet?: string | null
-          before_snippet?: string | null
-          brand_id?: string
-          change_type?: string
-          changed_fields?: string[] | null
-          confidence?: number
-          crawl_run_id?: string | null
-          created_at?: string
-          detected_at?: string
-          detection_method?: string
-          id?: string
-          importance?: string
-          linked_run_id?: string | null
-          new_content?: Json | null
-          old_content?: Json | null
-          page_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "site_changes_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "brands"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "site_changes_crawl_run_id_fkey"
-            columns: ["crawl_run_id"]
-            isOneToOne: false
-            referencedRelation: "site_crawl_runs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "site_changes_linked_run_id_fkey"
-            columns: ["linked_run_id"]
-            isOneToOne: false
-            referencedRelation: "measurement_runs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "site_changes_page_id_fkey"
+            foreignKeyName: "checks_page_id_fkey"
             columns: ["page_id"]
             isOneToOne: false
-            referencedRelation: "site_pages"
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checks_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
             referencedColumns: ["id"]
           },
         ]
       }
-      site_crawl_runs: {
+      evidence: {
         Row: {
-          brand_id: string
-          completed_at: string | null
-          crawl_delay_ms: number
-          created_at: string
+          created_at: string | null
           id: string
-          pages_changed: number
-          pages_checked: number
-          pages_total: number
-          started_at: string
-          status: string
-          updated_at: string
-          version_number: number | null
+          issue_id: string | null
+          payload: Json | null
+          scan_id: string
+          type: string
         }
         Insert: {
-          brand_id: string
-          completed_at?: string | null
-          crawl_delay_ms?: number
-          created_at?: string
+          created_at?: string | null
           id?: string
-          pages_changed?: number
-          pages_checked?: number
-          pages_total?: number
-          started_at?: string
-          status?: string
-          updated_at?: string
-          version_number?: number | null
+          issue_id?: string | null
+          payload?: Json | null
+          scan_id: string
+          type: string
         }
         Update: {
-          brand_id?: string
-          completed_at?: string | null
-          crawl_delay_ms?: number
-          created_at?: string
+          created_at?: string | null
           id?: string
-          pages_changed?: number
-          pages_checked?: number
-          pages_total?: number
-          started_at?: string
-          status?: string
-          updated_at?: string
-          version_number?: number | null
+          issue_id?: string | null
+          payload?: Json | null
+          scan_id?: string
+          type?: string
         }
         Relationships: [
           {
-            foreignKeyName: "site_crawl_runs_brand_id_fkey"
-            columns: ["brand_id"]
+            foreignKeyName: "evidence_issue_id_fkey"
+            columns: ["issue_id"]
             isOneToOne: false
-            referencedRelation: "brands"
+            referencedRelation: "issues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evidence_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
             referencedColumns: ["id"]
           },
         ]
       }
-      site_pages: {
+      issues: {
         Row: {
-          body_hash: string | null
-          brand_id: string
-          consecutive_failures: number
-          created_at: string
-          cta_hash: string | null
-          extracted_content: Json | null
-          headings_hash: string | null
+          category: string
+          confidence: string | null
+          created_at: string | null
+          description: string | null
           id: string
-          is_spa: boolean | null
-          last_checked_at: string | null
-          links_hash: string | null
-          meta_hash: string | null
-          pricing_hash: string | null
-          status: string
-          structure_hash: string | null
-          title_hash: string | null
+          page_id: string | null
+          scan_id: string
+          severity: string
+          status: string | null
+          suggestion: string | null
+          title: string
+        }
+        Insert: {
+          category: string
+          confidence?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          page_id?: string | null
+          scan_id: string
+          severity: string
+          status?: string | null
+          suggestion?: string | null
+          title: string
+        }
+        Update: {
+          category?: string
+          confidence?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          page_id?: string | null
+          scan_id?: string
+          severity?: string
+          status?: string | null
+          suggestion?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "issues_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "issues_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pages: {
+        Row: {
+          created_at: string | null
+          depth: number | null
+          final_url: string | null
+          id: string
+          response_time_ms: number | null
+          scan_id: string
+          status_code: number | null
+          title: string | null
           url: string
         }
         Insert: {
-          body_hash?: string | null
-          brand_id: string
-          consecutive_failures?: number
-          created_at?: string
-          cta_hash?: string | null
-          extracted_content?: Json | null
-          headings_hash?: string | null
+          created_at?: string | null
+          depth?: number | null
+          final_url?: string | null
           id?: string
-          is_spa?: boolean | null
-          last_checked_at?: string | null
-          links_hash?: string | null
-          meta_hash?: string | null
-          pricing_hash?: string | null
-          status?: string
-          structure_hash?: string | null
-          title_hash?: string | null
+          response_time_ms?: number | null
+          scan_id: string
+          status_code?: number | null
+          title?: string | null
           url: string
         }
         Update: {
-          body_hash?: string | null
-          brand_id?: string
-          consecutive_failures?: number
-          created_at?: string
-          cta_hash?: string | null
-          extracted_content?: Json | null
-          headings_hash?: string | null
+          created_at?: string | null
+          depth?: number | null
+          final_url?: string | null
           id?: string
-          is_spa?: boolean | null
-          last_checked_at?: string | null
-          links_hash?: string | null
-          meta_hash?: string | null
-          pricing_hash?: string | null
-          status?: string
-          structure_hash?: string | null
-          title_hash?: string | null
+          response_time_ms?: number | null
+          scan_id?: string
+          status_code?: number | null
+          title?: string | null
           url?: string
         }
         Relationships: [
           {
-            foreignKeyName: "site_pages_brand_id_fkey"
-            columns: ["brand_id"]
+            foreignKeyName: "pages_scan_id_fkey"
+            columns: ["scan_id"]
             isOneToOne: false
-            referencedRelation: "brands"
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scans: {
+        Row: {
+          checks_failed: number | null
+          checks_passed: number | null
+          checks_total: number | null
+          checks_warning: number | null
+          completed_at: string | null
+          consent_confirmed_at: string | null
+          created_at: string | null
+          critical_count: number | null
+          error: string | null
+          id: string
+          major_count: number | null
+          pages_discovered: number | null
+          previous_scan_id: string | null
+          site_id: string
+          started_at: string | null
+          status: string
+          summary: string | null
+          user_id: string
+        }
+        Insert: {
+          checks_failed?: number | null
+          checks_passed?: number | null
+          checks_total?: number | null
+          checks_warning?: number | null
+          completed_at?: string | null
+          consent_confirmed_at?: string | null
+          created_at?: string | null
+          critical_count?: number | null
+          error?: string | null
+          id?: string
+          major_count?: number | null
+          pages_discovered?: number | null
+          previous_scan_id?: string | null
+          site_id: string
+          started_at?: string | null
+          status?: string
+          summary?: string | null
+          user_id: string
+        }
+        Update: {
+          checks_failed?: number | null
+          checks_passed?: number | null
+          checks_total?: number | null
+          checks_warning?: number | null
+          completed_at?: string | null
+          consent_confirmed_at?: string | null
+          created_at?: string | null
+          critical_count?: number | null
+          error?: string | null
+          id?: string
+          major_count?: number | null
+          pages_discovered?: number | null
+          previous_scan_id?: string | null
+          site_id?: string
+          started_at?: string | null
+          status?: string
+          summary?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scans_previous_scan_id_fkey"
+            columns: ["previous_scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scans_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      screenshots: {
+        Row: {
+          created_at: string | null
+          id: string
+          issue_id: string | null
+          page_id: string | null
+          scan_id: string
+          storage_path: string
+          viewport: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          issue_id?: string | null
+          page_id?: string | null
+          scan_id: string
+          storage_path: string
+          viewport: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          issue_id?: string | null
+          page_id?: string | null
+          scan_id?: string
+          storage_path?: string
+          viewport?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "screenshots_issue_id_fkey"
+            columns: ["issue_id"]
+            isOneToOne: false
+            referencedRelation: "issues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screenshots_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screenshots_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sites: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_scan_id: string | null
+          name: string | null
+          updated_at: string | null
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_scan_id?: string | null
+          name?: string | null
+          updated_at?: string | null
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_scan_id?: string | null
+          name?: string | null
+          updated_at?: string | null
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sites_last_scan_id_fkey"
+            columns: ["last_scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
             referencedColumns: ["id"]
           },
         ]
@@ -943,29 +387,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      close_crawl_run: {
-        Args: { p_brand_id: string; p_run_id: string }
-        Returns: {
-          brand_id: string
-          completed_at: string | null
-          crawl_delay_ms: number
-          created_at: string
-          id: string
-          pages_changed: number
-          pages_checked: number
-          pages_total: number
-          started_at: string
-          status: string
-          updated_at: string
-          version_number: number | null
-        }
-        SetofOptions: {
-          from: "*"
-          to: "site_crawl_runs"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

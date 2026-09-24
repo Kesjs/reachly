@@ -1,13 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, useRouterState, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip'
-import { Settings, LogOut, ChevronsUpDown, Shield } from 'lucide-react'
+import { LogOut, ChevronsUpDown } from 'lucide-react'
 import { getSupabaseBrowserClient } from '~/lib/supabase/client'
 
 // Menu profil partagé — utilisé dans le pied de la Sidebar (variant "sidebar")
 // et dans le Header sur mobile (variant "header") pour raccourcir l'accès au
 // compte sans avoir à ouvrir le tiroir puis scroller jusqu'en bas.
+//
+// NB : pas de lien "Paramètres"/"Admin" ici — ces pages n'existent pas
+// encore côté Reachly (reliquat de la version Reflet). Idem pour le check
+// is_admin : la table `profiles` n'existe plus dans le schéma Reachly.
+// À réintroduire quand ces écrans seront construits.
 interface AccountMenuProps {
   variant: 'sidebar' | 'header'
   isCollapsed?: boolean
@@ -16,9 +21,7 @@ interface AccountMenuProps {
 
 export function AccountMenu({ variant, isCollapsed = false, onNavigate }: AccountMenuProps) {
   const navigate = useNavigate()
-  const pathname = useRouterState({ select: (s) => s.location.pathname })
   const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [isAdmin, setIsAdmin] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -28,14 +31,6 @@ export function AccountMenu({ variant, isCollapsed = false, onNavigate }: Accoun
     supabase.auth.getUser().then(({ data }) => {
       if (data?.user?.email) {
         setUserEmail(data.user.email)
-        supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', data.user.id)
-          .single()
-          .then(({ data: profile }) => {
-            if (profile?.is_admin) setIsAdmin(true)
-          })
       }
     })
   }, [])
@@ -78,42 +73,6 @@ export function AccountMenu({ variant, isCollapsed = false, onNavigate }: Accoun
       </div>
 
       <div className="mt-1 space-y-0.5">
-        <Link
-          to="/dashboard/parametres"
-          onClick={() => {
-            setIsDropdownOpen(false)
-            onNavigate?.()
-          }}
-          className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-xs font-medium transition-colors ${
-            pathname.startsWith('/dashboard/parametres')
-              ? 'bg-elevated text-ink-primary'
-              : 'text-ink-secondary hover:bg-elevated/80 hover:text-ink-primary'
-          }`}
-        >
-          <Settings className="size-4 text-ink-muted" />
-          Paramètres
-        </Link>
-
-        {isAdmin && (
-          <Link
-            to="/admin"
-            onClick={() => {
-              setIsDropdownOpen(false)
-              onNavigate?.()
-            }}
-            className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-xs font-medium transition-colors ${
-              pathname.startsWith('/admin')
-                ? 'bg-elevated text-ink-primary'
-                : 'text-ink-secondary hover:bg-elevated/80 hover:text-ink-primary'
-            }`}
-          >
-            <Shield className="size-4 text-ink-muted" />
-            Dashboard Admin
-          </Link>
-        )}
-
-        <div className="my-1 border-t border-border/60" />
-
         <button
           type="button"
           onClick={() => {

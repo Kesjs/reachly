@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { 
   Globe, 
   TestTube2, 
-  FormInput, 
   Monitor, 
   Camera, 
   FileCheck,
@@ -12,7 +11,7 @@ import {
   Clock,
   Loader2
 } from 'lucide-react'
-import type { ScanStatus } from '~/lib/types/qa'
+import type { ScanStatus } from '~/lib/qa/types'
 
 interface QAWorkflowStatesProps {
   status: ScanStatus
@@ -24,7 +23,7 @@ interface QAWorkflowStatesProps {
 export function QAWorkflowStates({ status, progress = 0, currentStep, className = "" }: QAWorkflowStatesProps) {
   const getStepConfig = (stepStatus: ScanStatus) => {
     switch (stepStatus) {
-      case 'idle':
+      case 'created':
         return {
           label: 'En attente',
           description: 'Prêt à lancer le QA',
@@ -41,43 +40,34 @@ export function QAWorkflowStates({ status, progress = 0, currentStep, className 
           bg: 'bg-info/10',
           loading: true
         }
-      case 'testing':
+      case 'crawling':
         return {
-          label: 'Tests en cours',
-          description: 'Vérification des liens et navigation...',
+          label: 'Exploration du site',
+          description: 'Parcours des pages et vérification des liens...',
           icon: TestTube2,
           color: 'text-info',
           bg: 'bg-info/10',
           loading: true
         }
-      case 'forms':
+      case 'browser_testing':
         return {
-          label: 'Test des formulaires',
-          description: 'Validation des soumissions...',
-          icon: FormInput,
-          color: 'text-info',
-          bg: 'bg-info/10',
-          loading: true
-        }
-      case 'browser':
-        return {
-          label: 'Vérification navigateur',
-          description: 'Analyse des erreurs JavaScript et réseau...',
+          label: 'Tests navigateur',
+          description: 'Validation des formulaires et des erreurs JS/réseau...',
           icon: Monitor,
           color: 'text-info',
           bg: 'bg-info/10',
           loading: true
         }
-      case 'visual':
+      case 'analyzing':
         return {
-          label: 'Analyse visuelle',
-          description: 'Capture des screenshots et vérifications visuelles...',
+          label: 'Analyse',
+          description: 'Analyse visuelle et vérifications des résultats...',
           icon: Camera,
           color: 'text-info',
           bg: 'bg-info/10',
           loading: true
         }
-      case 'finalizing':
+      case 'reporting':
         return {
           label: 'Finalisation',
           description: 'Génération du rapport...',
@@ -190,15 +180,14 @@ interface QAStepsTimelineProps {
 export function QAStepsTimeline({ status, startTime, endTime, className = "" }: QAStepsTimelineProps) {
   const steps = [
     { key: 'discovering', label: 'Découverte', duration: '~2min' },
-    { key: 'testing', label: 'Tests navigation', duration: '~3min' },
-    { key: 'forms', label: 'Tests formulaires', duration: '~2min' },
-    { key: 'browser', label: 'Vérifications navigateur', duration: '~1min' },
-    { key: 'visual', label: 'Analyse visuelle', duration: '~2min' },
-    { key: 'finalizing', label: 'Finalisation', duration: '~30s' },
+    { key: 'crawling', label: 'Exploration du site', duration: '~3min' },
+    { key: 'browser_testing', label: 'Tests navigateur', duration: '~2min' },
+    { key: 'analyzing', label: 'Analyse', duration: '~1min' },
+    { key: 'reporting', label: 'Finalisation', duration: '~30s' },
   ]
 
   const getStepStatus = (stepKey: string): 'completed' | 'current' | 'pending' => {
-    const stepOrder = ['discovering', 'testing', 'forms', 'browser', 'visual', 'finalizing']
+    const stepOrder = ['discovering', 'crawling', 'browser_testing', 'analyzing', 'reporting']
     const currentIndex = stepOrder.indexOf(status)
     const stepIndex = stepOrder.indexOf(stepKey)
     

@@ -2,7 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '../../supabase/database.types';
-import { QAOrchestrator, QAConfigManager } from '../qa';
+import { QAOrchestrator, QAConfigManager } from '../../qa';
 
 // Singleton pour l'orchestrateur
 let orchestratorInstance: QAOrchestrator | null = null;
@@ -74,7 +74,7 @@ export async function startQAScan(
   const scanId = crypto.randomUUID();
   
   // Ne pas attendre la fin du scan - exécution en arrière-plan
-  scanPromise.catch(error => {
+  scanPromise.catch((error: unknown) => {
     console.error('Erreur lors du scan QA:', error);
   });
 
@@ -178,7 +178,7 @@ export async function retestScan(siteId: string, userId: string, url: string, pr
 
   const scanId = crypto.randomUUID();
   
-  scanPromise.catch(error => {
+  scanPromise.catch((error: unknown) => {
     console.error('Erreur lors du retest:', error);
   });
 
