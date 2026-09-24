@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Globe, Play, AlertCircle } from 'lucide-react'
 import { QAWorkflowStates } from './QAWorkflowStates'
+import { Checkbox } from '~/components/ui/checkbox'
 import type { ScanStatus } from '~/lib/types/qa'
 import { createSite, startQAScan, getScanStatus } from '~/lib/api/qa'
 import { validateUrl } from '~/lib/qa/utils'
@@ -21,10 +22,21 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
   const [error, setError] = useState<string | null>(null)
   const [siteId, setSiteId] = useState<string | null>(null)
   const [scanId, setScanId] = useState<string | null>(null)
+  // Consentement légal (spec §6.5) — obligatoire avant tout scan réel.
+  // Le timestamp est figé au moment où la case est cochée, pas au
+  // moment du submit, pour tracer précisément quand l'utilisateur a
+  // donné son accord.
+  const [consentGiven, setConsentGiven] = useState(false)
+  const [consentConfirmedAt, setConsentConfirmedAt] = useState<string | null>(null)
+
+  const toggleConsent = (checked: boolean) => {
+    setConsentGiven(checked)
+    setConsentConfirmedAt(checked ? new Date().toISOString() : null)
+  }
 
   const handleStartQA = async () => {
     if (!url.trim()) return
-    
+
     // Valider l'URL
     const validation = validateUrl(url)
     if (!validation.valid) {
@@ -35,6 +47,12 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
 
     if (!userId) {
       setError('Utilisateur non connecté')
+      setStep('error')
+      return
+    }
+
+    if (!consentGiven || !consentConfirmedAt) {
+      setError('Vous devez confirmer être autorisé(e) à tester ce site avant de lancer le QA.')
       setStep('error')
       return
     }
@@ -50,7 +68,7 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
       setSiteId(site.id)
 
       // Lancer le scan
-      const { scanId: newScanId } = await startQAScan(site.id, userId, url, 'full')
+      const { scanId: newScanId } = await startQAScan(site.id, userId, url, 'full', consentConfirmedAt)
       setScanId(newScanId)
 
       // Polling du statut du scan
@@ -114,6 +132,8 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
     setError(null)
     setSiteId(null)
     setScanId(null)
+    setConsentGiven(false)
+    setConsentConfirmedAt(null)
   }
 
   const handleClose = () => {
@@ -194,6 +214,20 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
                   </div>
                 </div>
 
+                <label className="flex items-start gap-3 text-sm text-ink-secondary cursor-pointer select-none">
+                  <Checkbox
+                    checked={consentGiven}
+                    onCheckedChange={toggleConsent}
+                    required
+                  />
+                  <span>
+                    Je confirme être autorisé(e) à tester ce site (propriétaire
+                    du site, mandaté par le propriétaire, ou environnement de
+                    test m'appartenant). Reachly décline toute responsabilité
+                    en cas de fausse déclaration.
+                  </span>
+                </label>
+
                 <div className="flex gap-3">
                   <button
                     onClick={handleClose}
@@ -203,7 +237,7 @@ export function NewQAModal({ isOpen, onClose, onSuccess, userId }: NewQAModalPro
                   </button>
                   <button
                     onClick={handleStartQA}
-                    disabled={!url.trim()}
+                    disabled={!url.trim() || !consentGiven}
                     className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-brand text-canvas hover:bg-brand-hover transition-colors disabled:opacity-50 disabled:hover:bg-brand"
                   >
                     <Play className="h-4 w-4" />

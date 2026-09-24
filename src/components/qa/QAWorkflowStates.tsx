@@ -24,14 +24,13 @@ interface QAWorkflowStatesProps {
 export function QAWorkflowStates({ status, progress = 0, currentStep, className = "" }: QAWorkflowStatesProps) {
   const getStepConfig = (stepStatus: ScanStatus) => {
     switch (stepStatus) {
-      case 'created':
+      case 'idle':
         return {
-          label: 'Scan créé',
-          description: 'Initialisation...',
+          label: 'En attente',
+          description: 'Prêt à lancer le QA',
           icon: Clock,
           color: 'text-ink-muted',
-          bg: 'bg-ink-muted/10',
-          loading: true
+          bg: 'bg-ink-muted/10'
         }
       case 'discovering':
         return {
@@ -42,37 +41,46 @@ export function QAWorkflowStates({ status, progress = 0, currentStep, className 
           bg: 'bg-info/10',
           loading: true
         }
-      case 'crawling':
+      case 'testing':
         return {
-          label: 'Exploration des pages',
-          description: 'Crawl des pages découvertes...',
+          label: 'Tests en cours',
+          description: 'Vérification des liens et navigation...',
           icon: TestTube2,
           color: 'text-info',
           bg: 'bg-info/10',
           loading: true
         }
-      case 'browser_testing':
+      case 'forms':
         return {
-          label: 'Tests navigateur',
-          description: 'Vérification navigation, formulaires, CTA...',
-          icon: Monitor,
-          color: 'text-info',
-          bg: 'bg-info/10',
-          loading: true
-        }
-      case 'analyzing':
-        return {
-          label: 'Analyse des résultats',
-          description: 'Extraction des problèmes et preuves...',
+          label: 'Test des formulaires',
+          description: 'Validation des soumissions...',
           icon: FormInput,
           color: 'text-info',
           bg: 'bg-info/10',
           loading: true
         }
-      case 'reporting':
+      case 'browser':
         return {
-          label: 'Génération du rapport',
-          description: 'Finalisation du rapport QA...',
+          label: 'Vérification navigateur',
+          description: 'Analyse des erreurs JavaScript et réseau...',
+          icon: Monitor,
+          color: 'text-info',
+          bg: 'bg-info/10',
+          loading: true
+        }
+      case 'visual':
+        return {
+          label: 'Analyse visuelle',
+          description: 'Capture des screenshots et vérifications visuelles...',
+          icon: Camera,
+          color: 'text-info',
+          bg: 'bg-info/10',
+          loading: true
+        }
+      case 'finalizing':
+        return {
+          label: 'Finalisation',
+          description: 'Génération du rapport...',
           icon: FileCheck,
           color: 'text-info',
           bg: 'bg-info/10',
@@ -181,15 +189,16 @@ interface QAStepsTimelineProps {
 
 export function QAStepsTimeline({ status, startTime, endTime, className = "" }: QAStepsTimelineProps) {
   const steps = [
-    { key: 'discovering', label: 'Découverte', duration: '~1min' },
-    { key: 'crawling', label: 'Exploration', duration: '~3min' },
-    { key: 'browser_testing', label: 'Tests navigateur', duration: '~4min' },
-    { key: 'analyzing', label: 'Analyse', duration: '~1min' },
-    { key: 'reporting', label: 'Rapport', duration: '~30s' },
+    { key: 'discovering', label: 'Découverte', duration: '~2min' },
+    { key: 'testing', label: 'Tests navigation', duration: '~3min' },
+    { key: 'forms', label: 'Tests formulaires', duration: '~2min' },
+    { key: 'browser', label: 'Vérifications navigateur', duration: '~1min' },
+    { key: 'visual', label: 'Analyse visuelle', duration: '~2min' },
+    { key: 'finalizing', label: 'Finalisation', duration: '~30s' },
   ]
 
   const getStepStatus = (stepKey: string): 'completed' | 'current' | 'pending' => {
-    const stepOrder = ['discovering', 'crawling', 'browser_testing', 'analyzing', 'reporting']
+    const stepOrder = ['discovering', 'testing', 'forms', 'browser', 'visual', 'finalizing']
     const currentIndex = stepOrder.indexOf(status)
     const stepIndex = stepOrder.indexOf(stepKey)
     

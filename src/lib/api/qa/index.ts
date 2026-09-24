@@ -46,16 +46,27 @@ export async function createSite(userId: string, url: string, name?: string) {
 }
 
 // Lancer un scan QA
-export async function startQAScan(siteId: string, userId: string, url: string, plan: 'quick' | 'full' | 'delivery' = 'full') {
+export async function startQAScan(
+  siteId: string,
+  userId: string,
+  url: string,
+  plan: 'quick' | 'full' | 'delivery' = 'full',
+  consentConfirmedAt?: string | null
+) {
   const config = getConfigForPlan(plan);
   const orchestrator = getOrchestrator();
-  
+
   // Lancer le scan de manière asynchrone
   const scanPromise = orchestrator.runScan({
     siteId,
     userId,
     url,
-    config
+    config,
+    // NB: l'orchestrateur (§7) n'écrit pas encore réellement la ligne
+    // `scans` — quand ce sera branché, consentConfirmedAt doit être
+    // passé tel quel dans l'insert (`scans.consent_confirmed_at`).
+    // Le refus est déjà bloqué côté client dans NewQAModal.
+    consentConfirmedAt
   });
 
   // Retourner immédiatement avec l'ID du scan (sera créé dans l'orchestrateur)
