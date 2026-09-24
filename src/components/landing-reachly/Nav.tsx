@@ -7,12 +7,12 @@ export function Nav() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-ink-primary font-display">
+            <Link to="/" className="text-xl font-bold text-white font-display">
               Reachly
             </Link>
           </div>
@@ -20,14 +20,14 @@ export function Nav() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
-              <a href="#produit" className="text-ink-secondary hover:text-ink-primary transition-colors">
-                Produit
+              <a href="#produit" className="text-slate-400 hover:text-white transition-colors text-sm">
+                Product
               </a>
-              <a href="#comment-ca-marche" className="text-ink-secondary hover:text-ink-primary transition-colors">
-                Comment ça marche
+              <a href="#comment-ca-marche" className="text-slate-400 hover:text-white transition-colors text-sm">
+                How it works
               </a>
-              <a href="#prix" className="text-ink-secondary hover:text-ink-primary transition-colors">
-                Prix
+              <a href="#prix" className="text-slate-400 hover:text-white transition-colors text-sm">
+                Pricing
               </a>
             </div>
           </div>
@@ -36,15 +36,15 @@ export function Nav() {
           <div className="hidden md:flex items-center space-x-4">
             <Link 
               to="/login" 
-              className="text-ink-secondary hover:text-ink-primary transition-colors"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
             >
-              Se connecter
+              Log in
             </Link>
             <Link 
               to="/signup" 
-              className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-canvas hover:bg-brand-hover transition-colors"
+              className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
             >
-              Tester mon site
+              Test your site
             </Link>
           </div>
 
@@ -52,7 +52,7 @@ export function Nav() {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-ink-secondary hover:text-ink-primary"
+              className="text-slate-400 hover:text-white"
               aria-label="Toggle menu"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -66,44 +66,44 @@ export function Nav() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border"
+            className="md:hidden border-t border-slate-800 bg-slate-950/95 backdrop-blur-xl"
           >
             <div className="space-y-1 px-2 pb-3 pt-2">
               <a
                 href="#produit"
-                className="block rounded-md px-3 py-2 text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
+                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Produit
+                Product
               </a>
               <a
                 href="#comment-ca-marche"
-                className="block rounded-md px-3 py-2 text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
+                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Comment ça marche
+                How it works
               </a>
               <a
                 href="#prix"
-                className="block rounded-md px-3 py-2 text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
+                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Prix
+                Pricing
               </a>
-              <hr className="border-border" />
+              <hr className="border-slate-800" />
               <Link
                 to="/login"
-                className="block rounded-md px-3 py-2 text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors"
+                className="block rounded-md px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Se connecter
+                Log in
               </Link>
               <Link
                 to="/signup"
-                className="block rounded-md px-3 py-2 bg-brand text-canvas font-medium hover:bg-brand-hover transition-colors"
+                className="block rounded-md px-3 py-2 bg-brand text-white font-medium hover:bg-brand-hover transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Tester mon site
+                Test your site
               </Link>
             </div>
           </motion.div>

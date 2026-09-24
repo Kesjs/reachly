@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { CheckCircle, XCircle, AlertTriangle, Wrench, Link2, Smartphone } from 'lucide-react'
 
 export function Problem() {
   const checkSteps = [
@@ -14,17 +14,17 @@ export function Problem() {
     {
       title: "Formulaire cassé",
       description: "La soumission échoue alors que le formulaire semble fonctionner.",
-      icon: "🔧"
+      icon: Wrench
     },
     {
-      title: "Lien cassé", 
+      title: "Lien cassé",
       description: "Une page ou un CTA renvoie vers une URL inexistante.",
-      icon: "🔗"
+      icon: Link2
     },
     {
       title: "Responsive cassé",
       description: "Le site fonctionne sur desktop mais un élément déborde ou devient inutilisable sur mobile.",
-      icon: "📱"
+      icon: Smartphone
     }
   ]
 
@@ -54,28 +54,31 @@ export function Problem() {
 
             {/* Problems List */}
             <div className="space-y-6">
-              {problems.map((problem, index) => (
-                <motion.div
-                  key={problem.title}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="flex gap-4"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-elevated text-lg">
-                    {problem.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-ink-primary mb-2">
-                      {problem.title}
-                    </h3>
-                    <p className="text-ink-secondary">
-                      {problem.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+              {problems.map((problem, index) => {
+                const IconComponent = problem.icon
+                return (
+                  <motion.div
+                    key={problem.title}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex gap-4"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-elevated text-brand">
+                      <IconComponent className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-ink-primary mb-2">
+                        {problem.title}
+                      </h3>
+                      <p className="text-ink-secondary">
+                        {problem.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
           </div>
 
